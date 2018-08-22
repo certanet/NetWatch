@@ -1,0 +1,108 @@
+{% block doc -%}
+<!DOCTYPE html>
+<html{% block html_attribs %}{% endblock html_attribs %}>
+{%- block html %}
+  <head>
+    {%- block head %}
+    <title>{% block title %}{% endblock title %}</title>
+
+    {%- block metas %}
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="{{refresh_rate}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {%- endblock metas %}
+
+    {%- block styles %}
+
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/font-style.css') }}" rel="stylesheet">
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-latest.js') }}"></script>
+
+    <style type="text/css">
+      body {
+        padding-top: 30px; <!-- Top of page padding-->
+      }
+    </style>
+
+    {%- endblock styles %}
+    {%- endblock head %}
+  </head>
+
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+                <a class="navbar-brand" href="/" title="Keeping an eye on your network, all the time">
+        <img <img style="max-width:100px; margin-top: -7px;"
+             src="{{ url_for('static', filename='img/logo.png') }}"></a>
+
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a></li>
+                <li><a href="/nodes"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span> Nodes</a></li>
+                <li><a href="/rules"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Rules</a></li>
+                <li><a href="/connectionprofiles"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span> Connection Profiles</a></li>
+                <li><a href="/configs"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Configs</a></li>
+                <li><a href="/new"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> NewApp</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> About</a></li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+<!-- About Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="text-info" id="myModalLabel" align="center">NetWatch</h3>
+      </div>
+      <div class="modal-body">
+        <p><b>Version:</b><br></p>
+        <p><b>DB Server:</b><br></p><p class="uppercase">tbc</p>
+        <p><b>App Server:</b><br></p><p class="uppercase">{{ app_srv_hostname }}</p>
+        <p><b>Web Server:</b><br></p><p class="uppercase"><!--# echo var="hostname" --></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+  <body{% block body_attribs %}{% endblock body_attribs %}>
+    {% block body -%}
+    {% block content -%}
+    {%- endblock content %}
+
+    {% block scripts %}
+    
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/dash-charts.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/highcharts.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/clock.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap-confirmation.min.js') }}"></script>
+
+    {%- endblock scripts %}
+    {%- endblock body %}
+  </body>
+{%- endblock html %}
+</html>
+{% endblock doc -%}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+
+<div class="page-header">
+    <h1 class="text-primary" align="center">{{ title }}</h1>
+</div>
+
+<form action="{{ url_for('new_model', slug=slug) }}" method="post">
+	{{ form.csrf_token }}
+	{% for field in form %}
+		{% if field.label.text != 'CSRF Token' %}
+		<div class="form-group{%if field.errors %} has-error{% endif %}">
+			{{ field.label }} 
+			{{ field(class='form-control', value='') }}
+			{% for error in field.errors %}
+				<span class="help-block">{{ error }}</span>
+			{% endfor %}
+		</div>
+		{% endif %}
+	{% endfor %}
+	<input type="submit" class="btn btn-success" value="Add">
+</form>
+{% endblock %}

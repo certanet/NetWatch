@@ -1,0 +1,35 @@
+{% extends "pagebase.html" %}
+
+{% block title %}
+    {% if title %}
+    {{ title }} - NetWatch
+    {% else %}
+    Welcome to NetWatch
+    {% endif %}
+{% endblock %}
+
+
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+        {# Flashed messages #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}" role="alert">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        {# End Flashed messages #}
+
+    {% block page_content %}{% endblock %}
+</div>
+
+{% endblock %}

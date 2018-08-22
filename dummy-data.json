@@ -1,0 +1,144 @@
+{
+    "dummy-data": {
+        "connectionprofiles": [
+            {
+                "profile_name": "LAB-TEST",
+                "device_os": "cisco_ios",
+                "ssh_username": "test",
+                "ssh_password": "test",
+                "ssh_enable": "test",
+                "config_command": "show start"
+            }
+        ],
+        "rules": [
+    {"rule_name": "iBanner",
+     "rule_desc": "Check for a banner",
+     "config": "banner motd ^C#*** WELCOME BANNER ***#^C",
+     "remediation_config": "banner motd #*** WELCOME BANNER ***#\ninterface Loopback1\nno shutdown"
+     },
+    {"rule_name": "PASS",
+     "rule_desc": "Check for password encryption",
+     "config": "^service password-encryption",
+     "remediation_config": "service password-encryption",
+     "regex": true
+     },
+    {"rule_name": "HTTP",
+     "rule_desc": "Check for HTTP server",
+     "config": "^ip http server",
+     "remediation_config": "no ip http server",
+     "regex": true,
+     "found_in_config": true
+     },
+    {"rule_name": "VTY",
+     "rule_desc": "Check VTY lines are secured",
+     "config": "banner motd \\^C... WELCOME BANNER ...\\^C",
+     "remediation_config": "banner motd #*** WELCOME BANNER ***#\ninterface Loopback1\nno shutdown",
+     "regex": true
+     }
+],
+        "nodes": [
+    {"node_name": "NODE1",
+     "ip_address": "192.168.244.101",
+     "node_status": true,
+     "last_seen": "2016-05-01 18:30:00"
+     },
+    {"node_name": "NODE2",
+     "ip_address": "192.168.244.102",
+     "last_seen": "2016-04-04 14:30:00",
+     "next_poll": "2015-04-05 14:30:00"
+     },
+    {"node_name": "NODE3",
+     "ip_address": "192.168.244.103",
+     "next_poll": "2016-01-08 21:15:00"
+     },
+    {"node_name": "NODE4",
+     "ip_address": "192.168.244.104",
+     "next_poll": "2016-01-08 21:15:00"
+     },
+    {"node_name": "NODE5",
+     "ip_address": "192.168.244.105",
+     "next_poll": "2016-01-08 21:15:00"
+     },
+    {"node_name": "NODE6",
+     "ip_address": "192.168.244.106",
+     "node_status": true,
+     "last_seen": "2016-05-01 21:15:00",
+     "next_poll": "2016-05-02 21:15:00"
+     },
+    {"node_name": "NODE7",
+     "ip_address": "192.168.244.107",
+     "next_poll": "2016-01-08 21:15:00"
+     },
+    {"node_name": "NODE8",
+     "ip_address": "192.168.244.108",
+     "last_seen": "2016-04-04 21:15:00",
+     "next_poll": "2016-04-05 21:15:00"
+     },
+    {"node_name": "NODE9",
+     "ip_address": "192.168.244.109",
+     "last_seen": "2016-01-07 21:15:00",
+     "next_poll": "2016-01-08 21:15:00"
+     },
+    {"node_name": "NODE10",
+     "ip_address": "192.168.244.110",
+     "next_poll": "2016-01-08 21:15:00"
+     },
+    {"node_name": "NODE11",
+     "ip_address": "192.168.244.111",
+     "next_poll": "2016-01-08 21:15:00"
+     },
+    {"node_name": "NODE12",
+     "ip_address": "192.168.244.112",
+     "next_poll": "2016-01-08 21:15:00"
+     },
+    {"node_name": "NODE13",
+     "ip_address": "192.168.244.113",
+     "next_poll": "2016-01-08 21:15:00"
+     } ],
+        "noderules": [
+    {"node": 2,
+     "rule": 1,
+     "nr_status": 1
+     },
+    {"node": 2,
+     "rule": 2,
+     "nr_status": 1
+     },
+    {"node": 12,
+     "rule": 1,
+     "nr_status": 1
+     },
+    {"node": 3,
+     "rule": 3,
+     "nr_status": 0
+     },
+    {"node": 3,
+     "rule": 2,
+     "nr_status": 1
+     },
+    {"node": 7,
+     "rule": 4,
+     "nr_status": 0
+     },
+    {"node": 11,
+     "rule": 1,
+     "nr_status": 0
+     },
+    {"node": 11,
+     "rule": 3,
+     "nr_status": 0
+     },
+    {"node": 11,
+     "rule": 2,
+     "nr_status": 0
+     },
+    {"node": 1,
+     "rule": 1,
+     "nr_status": 1
+     },
+    {"node": 1,
+     "rule": 2,
+     "nr_status": 1
+     }]
+    }
+}

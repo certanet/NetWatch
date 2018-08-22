@@ -1,0 +1,6 @@
+configs/
+logs/
+venv/
+*.pyc
+*.db
+config.py

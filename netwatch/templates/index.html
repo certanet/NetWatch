@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+
+<div class="page-header">
+    <h1 class="text-primary" align="center">
+      <span class="text-info glyphicon glyphicon-eye-open"></span>
+      {{ title }}
+      <span class="text-info glyphicon glyphicon-eye-open"></span>
+    </h1>
+</div>
+
+<div class="row">
+    <div class="col-sm-6 col-lg-6">
+        <div class="dual-unit">
+          <dtitle>Compliance Detail</dtitle>
+          <hr>
+          <table style="height:98%; width:100%">      
+            <tr>
+              <th>Node/Rule</th>
+              {% for rule in rule_list %}
+                <th data-toggle="tooltip" title="{{ rule.rule_desc }}" style="word-break:break-word;">{{ rule.rule_name }}</th>
+              {% endfor %}
+              <th style="word-break:break-word;">Last Seen</th>
+            </tr>
+  <!--  <tr>
+    <td></td>
+    </tr>
+  -->
+          {% for node in node_list %}
+              <tr>
+                <td data-toggle="tooltip" title="{{ node.ip_address }}" class="left" style="white-space: nowrap">{% if node.node_status %}<ok>{{ node.node_name }}</ok>
+                {% else %}{{ node.node_name }}
+                {% endif %}</td>
+
+                {% for rule in rule_list %}
+                  <td>{% if node_table[node.node_name][loop.index0] == "True" %}<ok>PASS</ok>
+                  {% elif node_table[node.node_name][loop.index0] == "-" %}-
+                  {% elif node_table[node.node_name][loop.index0] == "False" and node.node_status == True %}<pending>PEND</pending>
+                  {% else %}<bad>FAIL</bad>
+                  {% endif %}</td>
+                {% endfor %}
+
+                <td data-toggle="tooltip" title="Next Poll: {{ node.next_poll }}">{% if node.last_seen == None %} -
+                {% else %}{{ node.last_seen }}
+                {% endif %}</td>
+              </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  
+
+    <!-- DONUT DASH-CHARTS BLOCK -->
+    <div class="col-sm-3 col-lg-3">
+        <div class="dash-unit">
+          <dtitle>Realtime Activity</dtitle>
+          <hr>
+          <div id="load"></div>
+          <script>
+              var percent_online_nodes = {{ percent_online_nodes|safe }}
+              var percent_offline_nodes = {{ percent_offline_nodes|safe }}
+          </script>
+          <h2>{{number_node_online}} / {{number_total_nodes}}</h2><p align="center">Node(s) Online</p>
+      </div>
+    </div>
+    <!-- DONUT DASH-CHARTS BLOCK -->
+    <div class="col-sm-3 col-lg-3">
+        <div class="dash-unit">
+          <dtitle>Compliance By Node</dtitle>
+          <hr>
+          <div id="space"></div>
+          <script>
+              var percent_totally_comp_nodes = {{ percent_totally_comp_nodes|safe }}
+              var percent_pend_nodes = {{ percent_pend_nodes|safe }}
+              var percent_not_totally_comp_nodes = {{ percent_not_totally_comp_nodes|safe }}
+          </script>
+          <h2>{{percent_totally_comp_nodes}}%</h2><p align="center">Totally Compliant</p>
+        </div>
+    </div>
+
+
+    <div class="col-sm-3 col-lg-3">
+        <!-- TIME BLOCK -->
+        <div class="half-unit">
+          <dtitle>Current Time</dtitle>
+          <hr style="margin-bottom:1px;">
+          <div class="clockcenter">
+            <digiclock>--:--:--</digiclock>
+            <p>
+              Last Poll: <b id="pollclock">{{ last_poll }}</b><br>
+              Last Refresh: <b id="refreshclock">--:--:--</b>
+            </p>
+          </div>
+        </div>
+        <!-- SERVER UPTIME BLOCK -->
+        <div class="half-unit">
+          <dtitle>Server Status</dtitle>
+          <hr>
+          <div class="serverstatus">
+            <br>
+            <p><img src="{{ url_for('static', filename='img/up.png') }}" alt="">Uptime: <b id="pollclock"> {{ uptime }}</b></p>
+            <br><p><bold>
+            {% set testing_config_threshold = 50 %}
+            {% set testing_log_threshold = 100 %}
+
+            {% if number_config_backups > ((testing_config_threshold / 100) * 85) %}
+            <bad>{{ number_config_backups }}</bad>
+            {% elif number_config_backups > ((testing_config_threshold / 100) * 70) %}
+            <pending>{{ number_config_backups }}</pending>
+            {% else %}
+            <ok>{{ number_config_backups }}</ok>
+            {% endif %}
+            / {{testing_config_threshold}}</bold> | Config Backups</p>
+
+            <p><bold>
+            {% if number_logs > ((testing_log_threshold / 100) * 85) %}
+            <bad>{{ number_logs }}</bad>
+            {% elif number_logs > ((testing_log_threshold / 100) * 70) %}
+            <pending>{{ number_logs }}</pending>
+            {% else %}
+            <ok>{{ number_logs }}</ok>
+            {% endif %}
+            / {{testing_log_threshold}}</bold> | Logs</p>
+          </div>
+        </div>
+    </div>
+
+    <!-- TOTALS BLOCK -->     
+    <div class="col-sm-3 col-lg-3">
+        <div class="dash-unit">
+          <dtitle>Compliance By Rule</dtitle>
+          <hr>
+          <div class="cont">
+            <p><bold>{{number_comp_rules}}</bold> | <ok>Compliant</ok></p>
+            <br>
+            <p><bold>{{number_pend_rules}}</bold> | <pending>Pending</pending></p>
+            <br>
+            <p><bold>{{number_fail_rules}}</bold> | <bad>Non-Compliant</bad></p>
+            <br>
+            <p><img src="{{ url_for('static', filename='img/up-small.png') }}" alt=""> {{percent_comp_rules}}% Compliant</p>
+            <p><img src="{{ url_for('static', filename='img/down-small.png') }}" alt=""> {{percent_fail_rules}}% Non-Compliant</p>
+          </div>
+        </div>
+    </div>
+        
+</div>
+
+{% endblock %}

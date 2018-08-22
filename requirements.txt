@@ -1,0 +1,8 @@
+pycryptodome
+Flask
+peewee
+netmiko
+flask-wtf
+pbkdf2
+psycopg2-binary
+psutil

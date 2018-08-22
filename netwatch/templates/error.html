@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <div class="page-header">
+        <h1><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> Oops there's been an error...</h1>
+    </div>
+        {% block page_content %}
+		<h3>({{ err_message }})</h3>
+        {% endblock %}
+    
+</div>
+
+{% endblock %}

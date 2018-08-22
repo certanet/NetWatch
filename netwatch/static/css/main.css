@@ -1,0 +1,601 @@
+﻿/*!
+ * BLOCKS - Responsive Dashboard Theme
+ *
+ * Hey! Thanks for download this theme!
+ * This bootstrap theme is totally free. You can edit, share, distribute, use and whatever you want.
+ * Credits are always appreciated.
+ * Please, feel free to contact me if you have any questions regarding this theme.
+ *
+ *
+ * Copyright 2013 
+ * Created by: Carlos Alvarez
+ * URL: http://Alvarez.is
+ * Designed and built based on Twitter Bootstrap.
+ */
+
+/* COLOR REFERENCE
+- #1f1f1f (Background Color)
+- #3d3d3d (Dash-unit and half-unit Section) 
+- #262626 (Footer) 
+- #fa1d2d (Red - Used in selectors, parragraphs, bars and other) 
+- #b2c831 (Green - Used in titles, badges, bars and other) 
+- #bdbdbd & #fff (Font colors)
+*/
+
+
+/**********BASE CONFIGURATIONS**********/   
+body {
+	background:#1f1f1f;
+    font-family: 'Open Sans', sans-serif;
+}
+
+h1 {
+font-family: 'Raleway', sans-serif;}
+
+h3,h4 , h5 {
+	font-family: 'Open Sans', sans-serif;
+	font-weight:lighter;
+}
+
+h2{
+	font-size:22px;
+}
+
+h3 {
+	font-size:46px;
+	color:#b2c831
+}
+
+h5 {
+	color:#b2c831;
+	margin-left:5px;
+}
+
+p.uppercase {
+    text-transform: uppercase;
+}
+
+/***********BLOCKS & WRAPS***********/
+
+/*--- Dash Unit / Used in Dashboard page ---*/
+.dual-unit {		
+	margin-bottom: 30px;
+	padding-bottom:10px;
+	border: 1px solid #383737;
+	background-image:url('../img/sep-half.png');
+	background-color: #3d3d3d;
+	color:white;
+	height:610px;
+}
+
+.dual-unit:hover {
+	background-color: #4f4f4f;
+	-moz-box-shadow:    3px 3px 2px 0px #151515;
+    -webkit-box-shadow: 3px 3px 2px 0px #151515;
+    box-shadow:         3px 3px 2px 0px #151515;
+
+}
+
+.dual-unit dtitle {
+	font-size:11px;
+	text-transform:uppercase;
+	color:#ffffff;
+	margin:8px;
+	padding:0px;
+	height:inherit	
+	}
+
+.dual-unit hr {
+  	border: 0;
+  	border-top: 1px solid #151515;
+  	border-top-style: dashed;
+	margin-top:3px;
+	margin-bottom:1px;
+	}
+	
+.dual-unit td {
+	font-size: 14px;
+	font-weight: 200;
+	line-height: 16px;
+	color: inherit;
+	margin: 0 0 10px;
+	padding:5px;
+	text-align:center;
+ }
+table td.left{
+    font-size: 14px;
+	font-weight: bold;
+	line-height: 16px;
+	color: inherit;
+	margin: 0 0 10px;
+	padding:5px;
+	text-align:left;
+    }
+	
+
+
+.dual-unit ok {
+	color:#b2c831;
+}
+
+.dual-unit pending {
+	color:#f0ad4e;
+}
+
+.dual-unit bad {
+	color:#fa1d2d;
+}
+
+ 
+.dual-unit th {
+	font-family: 'Open Sans', sans-serif;
+	font-weight: bold;
+	font-size: 14px;
+	letter-spacing: 0px;
+	color: #ffffff;
+	text-align:center;
+}
+	
+
+.dash-unit {		
+	margin-bottom: 30px;
+	padding-bottom:10px;
+	border: 1px solid #383737;
+	background-image:url('../img/sep-half.png');
+	background-color: #3d3d3d;
+	color:white;
+	height:290px;
+}
+
+.dash-unit:hover {
+	background-color: #4f4f4f;
+	-moz-box-shadow:    3px 3px 2px 0px #151515;
+    -webkit-box-shadow: 3px 3px 2px 0px #151515;
+    box-shadow:         3px 3px 2px 0px #151515;
+
+}
+
+.dash-unit dtitle {
+	font-size:11px;
+	text-transform:uppercase;
+	color:#ffffff;
+	margin:8px;
+	padding:0px;
+	height:inherit	
+	}
+	
+.dash-unit hr {
+  	border: 0;
+  	border-top: 1px solid #151515;
+  	border-top-style: dashed;
+	margin-top:3px;
+}
+
+.dash-unit h1 {
+	font-family: 'Raleway', sans-serif;
+	font-weight:300;
+	font-size: 20px;
+	line-height: 2px;
+	letter-spacing: 0px;
+	color: #ffffff;
+	padding-top:10px;
+	padding-left:5px;
+	margin-top:2px;
+	text-align:center;
+}
+
+.dash-unit h2 {
+	font-family: 'Open Sans', sans-serif;
+	font-weight: bold;
+	font-size: 30px;
+	line-height: 26px;
+	letter-spacing: 0px;
+	color: #ffffff;
+	padding-top:10px;
+	padding-left:5px;
+	margin-top:2px;
+	text-align:center;
+}
+
+
+.dash-unit h3 {
+	font-weight:300;
+	font-size: 15px;
+	line-height: 2px;
+	letter-spacing: 0px;
+	color: #b2c831;
+	padding-top:10px;
+	padding-left:5px;
+	margin-top:2px;
+	text-align:center;
+}
+
+
+.dash-unit p {
+	font-size: 14px;
+	font-weight: 200;
+	line-height: 16px;
+	color: inherit;
+	margin: 0 0 10px;
+	padding:5px;
+ }
+
+.dash-unit h4 {
+	padding-left:5px;
+	margin-top:2px;
+	font-size: 13px;
+	font-weight:lighter;
+	line-height: 1;
+	letter-spacing: 0px;
+	color: #fff;
+}
+
+.dash-unit bold{
+	font-family: 'Open Sans', sans-serif;
+	font-size:26px;
+	font-weight:bold;
+	color:#fff;
+	vertical-align:middle;
+}
+
+
+/**********Half-Unit / Used in index.html**********/   
+.half-unit {		
+	margin-bottom: 30px;
+	padding-bottom: 4px;
+	border: 1px solid #383737;
+	background-image:url('../img/sep-half.png');
+	background-color: #3d3d3d;
+	color:white;
+	height:130px;
+}
+
+.half-unit:hover {
+	background-color: #4f4f4f;
+	-moz-box-shadow:    3px 3px 2px 0px #151515;
+    -webkit-box-shadow: 3px 3px 2px 0px #151515;
+    box-shadow:         3px 3px 2px 0px #151515;
+
+}
+
+.half-unit dtitle {
+	font-size:10px;
+	text-transform:uppercase;
+	color:#ffffff;
+	margin:8px;
+	padding:0px;
+	height:inherit	
+	}
+	
+.half-unit hr {
+  	border: 0;
+  	border-top: 1px solid #151515;
+  	border-top-style: dashed;
+	margin-top:3px;
+}
+
+.half-unit h1 {
+	font-family: 'Raleway', sans-serif;
+	font-weight:300;
+	font-size: 20px;
+	line-height: 1;
+	letter-spacing: 0px;
+	color: #ffffff;
+	padding-top:10px;
+	padding-left:5px;
+	margin-top:2px;
+	text-align:center;
+}
+
+.half-unit h4 {
+	padding-left:5px;
+	margin-top:2px;
+	font-size: 13px;
+	font-weight:lighter;
+	line-height: 1;
+	letter-spacing: 0px;
+	color: #fff;
+}
+
+
+.half-unit bold{
+	font-family: 'Open Sans', sans-serif;
+	font-size:26px;
+	font-weight:bold;
+	color:#fff;
+	vertical-align:middle;
+}
+
+/**********Styling Elements**********/   
+.serverstatus {
+	text-align:center;
+	margin-top:-15px;
+	line-height:5px;
+}
+
+.serverstatus p {
+	font-family: 'Open Sans', sans-serif;
+	margin-left:8px;
+	font-size:14px;
+}
+
+.serverstatus bold {
+	line-height:20px;
+	font-size:20px;
+}
+
+.serverstatus ok {
+	color:#b2c831;
+}
+
+.serverstatus pending {
+	color:#f0ad4e;
+}
+
+.serverstatus bad {
+	color:#fa1d2d;
+}
+
+.cont {
+	text-align:center;
+	margin-top:20px;
+}
+
+.cont ok {
+	color:#b2c831;
+}
+
+.cont pending {
+	color:#f0ad4e;
+}
+
+.cont bad {
+	color:#fa1d2d;
+}
+
+.cont2 {
+	text-align:center;
+	margin-top:-15px;
+	font-size:12px;
+	line-height:7px;
+}
+
+.cont2 bold{
+	font-size:10px;
+	font-weight:bold;
+	color:#b2c831
+}
+
+.text p {
+	font-family: 'Open Sans', sans-serif;
+	margin-left:8px;
+	font-size:14px;
+	line-height:18px;
+}
+
+.text grey {
+	font-size:11px;
+	color:silver
+}
+
+
+/***********Bootstrap Default Modifications***********/
+
+.thumbnail {
+	border:0px;
+	text-align:center;
+  -webkit-box-shadow: 0px;
+     -moz-box-shadow: 0px;
+          box-shadow: 0px;
+    background: none;
+    text-align: center;      
+	
+}
+
+.modal-header {
+	background-image:url('../img/sep-half.png');
+	background-color: #4f4f4f;
+	color:#fff;
+}
+
+
+input[type=submit] {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 15px;
+	background: #b2c831;
+	color: #fff;
+	border: none;
+	padding: 8px 28px 10px 26px;
+	  *-webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+
+}
+input[type=text], textarea {
+	background: #cdcbcc;
+	font-size: 13px;
+	display: block;
+	width: 100%;
+	border: none;
+	box-shadow: none;
+	height: 30px;
+	line-height: 18px;
+	padding: 0;
+	text-indent: 18px;
+	margin: 0 0 18px;
+}
+textarea {
+	line-height: 18px;
+	padding: 18px;
+	width: 100%;
+	text-indent: 0;	
+}
+.textarea-container { margin: 0 18px; }
+.textarea-container textarea { margin-left: -18px; }
+#contact textarea { width: 100%; height: 45px; }
+
+
+.progress-bar {
+	background-color: #b2c831;
+}
+
+
+
+
+/***********LineIcons Styles***********/
+
+
+.info-user {
+	text-align:center;
+	font-size: 24px;
+	color: #b2c831;
+	}
+
+.fs1 {
+	padding:5px 5px 5px 5px;
+	position:relative;
+}
+
+.fs1:hover {
+	position:relative;
+	color: #fff;
+	cursor:pointer
+}
+
+.fs2 {
+	padding:5px 5px 5px 5px;
+	position:relative;
+	font-size:35px;
+	vertical-align: text-bottom
+}
+
+/**********Clock Configuration**********/   
+
+digiclock {
+	font-size: 30px;
+	color: #fff;
+	text-align: center;
+	line-height: 60px;
+	margin-left: auto	
+}
+
+.clockcenter {
+	text-align:center;
+}
+
+
+/**********DONUT CHARTS STYLES**********/
+#load {
+	width: 11.313em;
+	height: 11.313em;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	margin-bottom: 1.063em;
+	background-position: center center;
+	margin:auto;
+}
+
+#space {
+	width: 11.313em;
+	height: 11.313em;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	margin-bottom: 1.063em;
+	background-position: center center;
+	margin:auto;
+}
+
+
+/**********Gauge Chart**********/   
+#canvas {
+	display: block;
+	width: 150px;
+	margin: 30px auto;
+}
+
+/**********Accordion Styling**********/   
+
+.accordion-group {
+	border: 1px solid #222;
+}
+.accordion-heading {
+  background-color: #5a5a5a;
+  *background-color: #5a5a5a;
+    background-repeat: repeat-x;
+  *-webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+    zoom: 1;
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	background-image: linear-gradient(to bottom, #707070, #707070);*
+}
+
+/**********Link Styling**********/   
+a {
+  color: #b2c831;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #dff948;
+  text-decoration: none;
+}
+
+
+
+/**********FooterWrap Section**********/   
+#footerwrap {
+    width: 100%;
+    background:#262626;
+	background-image:url('../img/sep-half.png');
+    padding-top:25px;
+    padding-bottom: 40px;
+	border-top-style: solid;
+    border-top-width:8px;
+    border-top-color:#1d1d1d;
+    text-align:center
+
+}
+
+#footerwrap p {
+	color:white;
+	font-size:12px;
+} 
+
+
+/**********Media Styles**********/   
+
+@media (max-width: 360px){
+/*Calendar Adsjustments*/
+.fc-header {margin-top:15px;}
+.fc-header-title h2{font-size:10px; }
+.fc-header-right {display:none}
+
+/* portrait tablet */
+@media (min-width: 767px) and (max-width: 768px) {
+	.info-aapl ul {
+  		margin-left:10px;
+  		float:left;
+}
+
+#load {
+	margin-left:5px;
+	margin-right:10px;
+}
+
+#space {
+	margin-left:5px;
+	margin-right:10px;
+}
+
+}
+
+/* Landscape iphone 5 and samsung galaxy */
+@media (min-width: 560px) and (max-width: 685px) {
+	.info-aapl ul {
+  		margin-left:40%;
+}
+
+}
