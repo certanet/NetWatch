@@ -171,6 +171,8 @@ class Rule(DBModel):
     rule_desc = CharField(null=True)
     config = TextField()
     regex = BooleanField(default=False)
+    # If True a rule config match = NOT compliant,
+    # If False a config match = compliant:
     found_in_config = BooleanField(default=False)
     remediation_config = TextField()
     # These should both be normalised (re escaped)
@@ -251,6 +253,15 @@ class Node(DBModel):
     next_poll = DateTimeField(default=datetime.datetime.strftime(datetime.datetime.now(),
                                                                  '%Y-%m-%d %H:%M:%S'))
     connection_profile = ForeignKeyField(ConnectionProfile, default=1)
+
+    def create_config(self, config):
+        Config.create(node=self, config=config)
+        return
+
+    def get_latest_config(self):
+        # Get configs for node and order from newest to oldest, return newest:
+        list_configs = Config.select().join(Node).where(Node.id == self.id).order_by(Config.saved_time.desc())
+        return list_configs[0]
 
 
 def list_rules_for_node(called_node_id):
@@ -463,6 +474,7 @@ class NodeRule(DBModel):
     node = ForeignKeyField(Node)
     rule = ForeignKeyField(Rule)
     nr_status = BooleanField(default=False)
+    auto_remediate = BooleanField(default=False)
 
     class Meta:
         indexes = (
@@ -566,6 +578,17 @@ def delete_noderule(node_id, rule_id):
     return
 
 
+def get_noderule_auto_remediate(node, rule):
+    try:
+        node_rule = NodeRule.get(NodeRule.node == node,
+                                 NodeRule.rule == rule)
+        auto = node_rule.auto_remediate
+    except:
+        auto = False
+        print("Object doesn't exist")
+    return auto
+
+
 """
 
 ~~~END OF NODERULES~~~
@@ -604,11 +627,11 @@ def add_settings(refresh, poll, dummy):
         settings = [
             # Used in head of index.html to set page refresh rate...
             {'setting_name': 'dash_refresh_rate_secs',
-             'setting_value': refresh
+             'setting_value': int(refresh)
              },
             # This is for ICMP only as SSH poll is set auto via node.next_poll:
             {'setting_name': 'poll_interval_mins',
-             'setting_value': poll
+             'setting_value': int(poll)
              },
             # Used in poller.py to check compliance against start or
             # running config  - startup is preffered:
@@ -662,6 +685,45 @@ def set_last_poll(time):
 """
 
 ~~~END OF SETTINGS~~~
+
+
+~~~START OF CONFIG~~~
+
+"""
+
+
+class Config(DBModel):
+    # Number of configs need to be limited to 10 per node and then rotated
+    node = ForeignKeyField(Node, backref='configs')
+    config_name = CharField(max_length=500, unique=True, default=datetime.datetime.strftime(datetime.datetime.now(),
+                                                                 '%Y%m%d-%H%M%S') + ".cfg")
+    config = TextField()
+    saved_time = DateTimeField(default=datetime.datetime.strftime(datetime.datetime.now(),
+                                                                 '%Y-%m-%d %H:%M:%S'))
+
+
+def create_config(config_dict):
+    # config_dict example:
+    # {"node": 1, "config": "hostname SWITCH01"}
+
+    try:
+        config = Config.create(**config_dict)
+        config.save()
+        result = ["Config \"{0.config_name}\" Created!"
+                  .format(config), 'success']
+    except:
+        result = ["Create Failed!", 'danger']
+    return result
+
+
+def create_config2(node_id, config):
+    Config.create(node=node_id, config=config)
+    return
+
+
+"""
+
+~~~END OF CONFIG~~~
 
 
 ~~~START OF BULK~~~
