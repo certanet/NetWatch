@@ -215,7 +215,6 @@ def poller_run(node):
                     models.set_noderule_status(node, rule, True)
 
             if backup_again:
-                # THIS IS BREAKING WITH CONFIG_NAME NOT BEING UNIQUE --- IS THE TIME NOT TAKING EFFECT IN Config Model default???
                 new_config = ssh_return_config(node)
                 node.create_config(new_config + "\n")
 
@@ -244,10 +243,12 @@ def poller_service():
             if models.get_settings('pause_poller') == "True":
                 models.set_setting("poller_status", "PAUSING")
             print("Starting poller for {0.node_name}...".format(node))
-            thread = Thread(target=poller_run, args=(node,), name='Poller-' + node.node_name)
-            # IS THIS NEEDED NOW THE TASK ENDS?? IF SO, USE daemon=None:
-            thread.daemon = True  # This kills the thread when main proc dies
+            thread = Thread(target=poller_run,
+                            args=(node,),
+                            name='Poller-' + node.node_name)
             thread.start()
+            # FOR DEBUG
+            # Stops all threads running in parallel so prints can be seen:
             time.sleep(10)
 
         models.set_setting("poller_status", "STARTED")
@@ -262,8 +263,9 @@ def poller_service():
 
 def poller_init():
     print("Initialising Poller...")
-    thread = Thread(target=poller_service, name='Poller_Service_Thread')
-    thread.daemon = True
+    thread = Thread(target=poller_service,
+                    name='Poller_Service_Thread',
+                    daemon=True)
     thread.start()
 
 
