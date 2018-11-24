@@ -389,11 +389,6 @@ def set_node_status(node_obj, status_bool):
     return
 
 
-def get_node_next_poll(node):
-    node_obj = Node.get(Node.id == node.id)
-    return node_obj.next_poll
-
-
 def set_node_next_poll_relative(node, relative_time_in_mins):
     now = datetime.datetime.now()
     new_poll_time = now + datetime.timedelta(minutes=relative_time_in_mins)
@@ -405,16 +400,11 @@ def set_node_next_poll_relative(node, relative_time_in_mins):
 
 def is_next_poll_now(node):
     now = datetime.datetime.now()
-    if get_node_next_poll(node) < now:
+    if node.next_poll < now:
         poll_now = True
     else:
         poll_now = False
     return poll_now
-
-
-def get_node_ip(node_id):
-    node_obj = Node.get(Node.id == node_id)
-    return node_obj.ip_address
 
 
 def create_node(node_name, ip_address):
@@ -720,6 +710,16 @@ def create_config(config_dict):
 def create_config2(node_id, config):
     Config.create(node=node_id, config=config)
     return
+
+
+def list_all_configs():
+    record_set = Config.select()
+    configs = []
+
+    for record in record_set:
+        configs.append(record)
+
+    return configs
 
 
 """
