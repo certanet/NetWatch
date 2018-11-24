@@ -252,9 +252,11 @@ def poller_service():
             thread.start()
             # FOR DEBUG
             # Stops all threads running in parallel so prints can be seen:
-            time.sleep(10)
-
-        models.set_setting("poller_status", "STARTED")
+            time.sleep(3)
+        if models.get_settings('pause_poller') == "True":
+                models.set_setting("poller_status", "PAUSED")
+        else:
+            models.set_setting("poller_status", "STARTED")
         # Testing sleep timer:
         time.sleep(60)
         # This is the correct sleep time (mins in settings,
