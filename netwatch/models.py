@@ -255,8 +255,20 @@ class Node(DBModel):
                                                                  '%Y-%m-%d %H:%M:%S'))
     connection_profile = ForeignKeyField(ConnectionProfile, default=1)
 
-    def create_config(self, config):
-        Config.create(node=self, config=config)
+    def create_config(self, config, config_name=None):
+        if config_name is None:
+            config_name = self.node_name +\
+                "-" +\
+                datetime.datetime.strftime(
+                    datetime.datetime.now(), '%Y%m%d-%H%M%S') +\
+                ".cfg"
+
+        now = datetime.datetime.strftime(datetime.datetime.now(),
+                                         '%Y-%m-%d %H:%M:%S')
+        Config.create(node=self,
+                      config=config,
+                      config_name=config_name,
+                      saved_time=now)
         return
 
     def get_latest_config(self):
@@ -700,8 +712,12 @@ def set_setting(setting_name, setting_value):
 class Config(DBModel):
     # Number of configs need to be limited to 10 per node and then rotated
     node = ForeignKeyField(Node, backref='configs')
-    config_name = CharField(max_length=500, unique=True, default=datetime.datetime.strftime(datetime.datetime.now(),
-                                                                 '%Y%m%d-%H%M%S') + ".cfg")
+    config_name = CharField(max_length=500,
+                            unique=True,
+                            default=node.node_name +
+                            "-" +
+                            datetime.datetime.strftime(datetime.datetime.now(),'%Y%m%d-%H%M%S') +
+                            ".cfg")
     config = TextField()
     saved_time = DateTimeField(default=datetime.datetime.strftime(datetime.datetime.now(),
                                                                  '%Y-%m-%d %H:%M:%S'))
@@ -719,11 +735,6 @@ def create_config(config_dict):
     except:
         result = ["Create Failed!", 'danger']
     return result
-
-
-def create_config2(node_id, config):
-    Config.create(node=node_id, config=config)
-    return
 
 
 def list_all_configs():
