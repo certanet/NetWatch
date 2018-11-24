@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, flash, request
-from netwatch import app, models, forms
+from netwatch import app, models, forms, poller
 from socket import gethostname
 import datetime
 import psutil
@@ -66,7 +66,9 @@ def home():
                            number_config_backups=number_config_backups,
                            number_logs=number_logs,
                            app_srv_hostname=gethostname(),
-                           uptime=pretty_uptime
+                           uptime=pretty_uptime,
+                           no_active_pollers=poller.get_active_pollers(),
+                           poller_status=models.get_settings("poller_status")
                            )
 
 

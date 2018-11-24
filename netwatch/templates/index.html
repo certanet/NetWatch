@@ -99,8 +99,24 @@
           <hr>
           <div class="serverstatus">
             <br>
-            <p><img src="{{ url_for('static', filename='img/up.png') }}" alt="">Uptime: <b id="pollclock"> {{ uptime }}</b></p>
-            <br><p><bold>
+            <p>Poller Status: <b>
+            {% if poller_status == "STARTED" or poller_status == "RUNNING" %}
+            <ok>{{ poller_status }}</ok>
+            {% elif poller_status == "PAUSED" %}
+            <pending>{{ poller_status }}</pending>
+            {% else %}
+            <bad>{{ poller_status }}</bad>
+            {% endif %}
+            </b></p>
+
+            <br>
+            <p>Uptime: <b>{{ uptime }}</b></p>
+            <br>
+
+            <p><bold>{{ no_active_pollers }}</bold> | Active Pollers</p>
+
+
+            <p><bold>
             {% set testing_config_threshold = 50 %}
             {% set testing_log_threshold = 100 %}
 

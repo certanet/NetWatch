@@ -6,7 +6,7 @@ from netmiko.ssh_exception import NetMikoTimeoutException, \
 from datetime import datetime
 import re
 import time
-from threading import Thread
+from threading import Thread, enumerate
 
 
 def ping(ip_address):
@@ -262,9 +262,19 @@ def poller_service():
 
 def poller_init():
     print("Initialising Poller...")
-    thread = Thread(target=poller_service, name='Poller_Service')
+    thread = Thread(target=poller_service, name='Poller_Service_Thread')
     thread.daemon = True
     thread.start()
+
+
+def get_active_pollers():
+    threads = enumerate()
+    poller_threads = 0
+
+    for thread in threads:
+        if "Thread" not in thread.name:
+            poller_threads += 1
+    return poller_threads
 
 
 if __name__ == '__main__':
