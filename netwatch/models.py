@@ -69,6 +69,7 @@ class ConnectionProfile(DBModel):
     ssh_enable = CharField(max_length=50)
     config_command = CharField(max_length=60)
     # save_config_cmd = CharField(max_length=60)
+    port_num = IntegerField(default=22)
 
     def __repr__(self):
         return self.profile_name

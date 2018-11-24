@@ -178,8 +178,8 @@ def build_device_profile(node):
                       'device_type': node.connection_profile.device_os,
                       'username': node.connection_profile.ssh_username,
                       'password': models.decrypt_creds(node.connection_profile.ssh_password),
-                      'secret': models.decrypt_creds(node.connection_profile.ssh_enable)
-                      }
+                      'secret': models.decrypt_creds(node.connection_profile.ssh_enable),
+                      'port': node.connection_profile.port_num}
     return device_profile
 
 
