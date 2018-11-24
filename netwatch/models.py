@@ -479,6 +479,13 @@ class NodeRule(DBModel):
         indexes = (
             (('node', 'rule'), True),)
 
+    def set_noderule_status(self, nr_status):
+        query = NodeRule.update(nr_status=nr_status)\
+            .where(NodeRule.id == self.id)
+        query.execute()
+        return
+
+
 
 def add_node_rules(node_id, rule_ids):
     """
@@ -536,25 +543,6 @@ def dict_node_table():
     return node_table
 
 
-def set_noderule_status(node, rule, nr_status):
-    """
-    Example of the 3 variables required:
-    Object{Node3}, Object{Rule100}, True
-
-    This would set node 3's rule 100 nr_status to True
-    """
-    try:
-        node_rule = NodeRule.get(NodeRule.node == node,
-                                 NodeRule.rule == rule)
-
-        query = NodeRule.update(
-            nr_status=nr_status).where(NodeRule.id == node_rule.id)
-        query.execute()
-    except:
-        print("Object doesn't exist")
-    return
-
-
 def delete_noderule(node_id, rule_id):
     """
     Takes a Node.id and a rule num
@@ -577,15 +565,14 @@ def delete_noderule(node_id, rule_id):
     return
 
 
-def get_noderule_auto_remediate(node, rule):
+def get_noderule(node, rule):
     try:
         node_rule = NodeRule.get(NodeRule.node == node,
                                  NodeRule.rule == rule)
-        auto = node_rule.auto_remediate
     except:
-        auto = False
         print("Object doesn't exist")
-    return auto
+        node_rule = None
+    return node_rule
 
 
 """

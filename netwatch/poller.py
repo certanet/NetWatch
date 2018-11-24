@@ -121,6 +121,7 @@ def check_config_compliance(node, rule):
     compliant = False
     backup_again = False
     node_config = node.get_latest_config()
+    noderule = models.get_noderule(node, rule)
 
     # NEED TO CHECK rule.regex Boolean and
     # rule.found_in_config Boolean
@@ -136,9 +137,9 @@ def check_config_compliance(node, rule):
 
         if match is None:
             logme("{0.rule_name} - Not Compliant!".format(rule))
-            models.set_noderule_status(node, rule, False)
+            noderule.set_noderule_status(compliant)
             # Checks if NR is enabled for auto remediate and executes:
-            if models.get_noderule_auto_remediate(node, rule):
+            if noderule.auto_remediate:
                 ssh_remediate_config(node, rule.remediation_config)
                 backup_again = True
                 compliant = True
@@ -156,14 +157,16 @@ def check_config_compliance(node, rule):
             compliant = True
         else:
             logme("{0.rule_name} - Not Compliant!".format(rule))
-            models.set_noderule_status(node, rule, False)
+            noderule.set_noderule_status(compliant)
             # Checks if NR is enabled for auto remediate and executes:
-            if models.get_noderule_auto_remediate(node, rule):
+            if noderule.auto_remediate:
                 ssh_remediate_config(node, rule.remediation_config)
                 backup_again = True
                 compliant = True
 
-    return {"backup_again": backup_again, "compliant": compliant}
+    noderule.set_noderule_status(compliant)
+
+    return {"backup_again": backup_again}
 
 
 def logme(output):
@@ -213,8 +216,6 @@ def poller_run(node):
                 # rather than after each rule is remediated:
                 if check_compliance['backup_again']:
                     backup_again = True
-                if check_compliance['compliant']:
-                    models.set_noderule_status(node, rule, True)
 
             if backup_again:
                 new_config = ssh_return_config(node)
