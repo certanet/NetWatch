@@ -120,12 +120,12 @@
             {% set testing_config_threshold = 50 %}
             {% set testing_log_threshold = 100 %}
 
-            {% if number_config_backups > ((testing_config_threshold / 100) * 85) %}
-            <bad>{{ number_config_backups }}</bad>
-            {% elif number_config_backups > ((testing_config_threshold / 100) * 70) %}
-            <pending>{{ number_config_backups }}</pending>
+            {% if num_total_configs > ((testing_config_threshold / 100) * 85) %}
+            <bad>{{ num_total_configs }}</bad>
+            {% elif num_total_configs > ((testing_config_threshold / 100) * 70) %}
+            <pending>{{ num_total_configs }}</pending>
             {% else %}
-            <ok>{{ number_config_backups }}</ok>
+            <ok>{{ num_total_configs }}</ok>
             {% endif %}
             / {{testing_config_threshold}}</bold> | Config Backups</p>
 

@@ -44,6 +44,8 @@ def home():
                                                     (uptime.seconds // 60) % 60,
                                                     uptime.seconds % 60)
 
+    num_total_configs = len(models.list_all_configs())
+
     return render_template('index.html',
                            title='Dashboard',
                            node_table=node_table,
@@ -68,7 +70,8 @@ def home():
                            app_srv_hostname=gethostname(),
                            uptime=pretty_uptime,
                            no_active_pollers=poller.get_active_pollers(),
-                           poller_status=models.get_settings("poller_status")
+                           poller_status=models.get_settings("poller_status"),
+                           num_total_configs=num_total_configs
                            )
 
 
