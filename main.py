@@ -9,10 +9,24 @@ import time
 
 def run_poller():
     def call_poller(node):
+        print("Started poller for {0.node_name}...".format(node))
+        poller.run(node)
+
+    def init_poller():
         while True:
-            print("Placeholder for poller...")
-            print("{0.node_name}".format(node))
-            poller.run(node)
+            print("Initialising Poller...")
+            while models.get_settings('pause_poller') == "True":
+                print("Poller paused!")
+                time.sleep(60)
+                print("Checking Poller status...")
+            for node in models.list_all_nodes():
+                print("Starting poller for {0.node_name}...".format(node))
+                thread = Thread(target=call_poller, args=(node,), name='Poller-' + node.node_name)
+                # IS THIS NEEDED NOW THE TASK ENDS?? IF SO, USE daemon=None:
+                thread.daemon = True  # This kills the thread when the main proc dies
+                thread.start()
+                time.sleep(10)
+
             # Testing sleep timer:
             time.sleep(60)
             # This is the correct sleep time (mins in settings,
@@ -21,11 +35,9 @@ def run_poller():
             #
             # time.sleep(int(models.get_settings('poll_interval_mins')) * 60)
 
-    for node in models.list_all_nodes():
-        thread = Thread(target=call_poller, args=(node,))
-        thread.daemon = True  # This kills the thread when the main proc dies
-        thread.start()
-        time.sleep(30)
+    thread = Thread(target=init_poller, name='Poller_Init')
+    thread.daemon = True
+    thread.start()
 
 
 db.create_tables([Rule, Node, NodeRule, Settings, ConnectionProfile, Config],
@@ -43,7 +55,12 @@ try:
     dummy = app.config['DUMMY_DATA']
 except:
     dummy = False
-add_settings(refresh, poll, dummy)
+try:
+    pause = app.config['PAUSE_POLLER']
+except:
+    pause = False
+
+add_settings(refresh, poll, dummy, pause)
 
 run_poller()
 
