@@ -682,6 +682,18 @@ def set_setting(setting_name, setting_value):
     return
 
 
+def list_dash_settings():
+    record_set = Settings.select()
+    settings = []
+    excluded_settings = ['last_poll', 'secret_salt', 'poller_status']
+
+    for record in record_set:
+        if record.setting_name not in excluded_settings:
+            settings.append(record)
+
+    return settings
+
+
 """
 
 ~~~END OF SETTINGS~~~

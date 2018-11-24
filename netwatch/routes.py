@@ -75,7 +75,7 @@ def home():
                            )
 
 
-@app.route('/settings')
+@app.route('/new')
 def tbc():
 
     # Placeholder page
@@ -89,6 +89,7 @@ def tbc():
 @app.route('/connectionprofiles/', defaults={'model': 'connectionprofiles'})
 @app.route('/configs/', defaults={'model': 'configs'})
 @app.route('/noderules/', defaults={'model': 'noderules'})
+@app.route('/settings/', defaults={'model': 'settings'})
 def modeltable(model):
     if model == "nodes":
         title = 'Nodes'
@@ -110,6 +111,10 @@ def modeltable(model):
         title = 'Node Rules'
         columns = models.list_columns_for("NodeRule")
         rows = models.list_all_node_rules()
+    elif model == "settings":
+        title = 'Settings'
+        columns = models.list_columns_for("Settings")
+        rows = models.list_dash_settings()
 
     return render_template('modeltable.html',
                            columns=columns,
