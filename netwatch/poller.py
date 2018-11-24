@@ -5,6 +5,8 @@ from netmiko.ssh_exception import NetMikoTimeoutException, \
     NetMikoAuthenticationException
 from datetime import datetime
 import re
+import time
+from threading import Thread
 
 
 def ping(ip_address):
@@ -183,7 +185,8 @@ def build_device_profile(node):
     return device_profile
 
 
-def run(node):
+def poller_run(node):
+    print("Started poller for {0.node_name}...".format(node))
     # run_time = datetime.now().strftime('%Y%m%d-%H%M')
     # log_file = './logs/POLLING-' + run_time + '.log'
     models.set_last_poll(datetime.now().strftime('%H:%M:%S'))
@@ -225,6 +228,43 @@ def run(node):
         models.set_node_status(node, False)
         if models.is_next_poll_now(node): #True if next poll is before now(), this prevents setting a recently checked node to a sooner poll time
             models.set_node_next_poll_relative(node, 0) #Set next_poll to now()+0mins, will not be checked until upto 5mins anyway as the Celery task should run 5mins, if set to now()+5mins the next Celery job may be before it
+
+
+def poller_service():
+    models.set_setting("poller_status", "STARTED")
+    print("Poller service started...")
+    while True:
+        while models.get_settings('pause_poller') == "True":
+            models.set_setting("poller_status", "PAUSED")
+            print("Poller paused!")
+            time.sleep(60)
+            print("Checking Poller status...")
+        models.set_setting("poller_status", "RUNNING")
+        for node in models.list_all_nodes():
+            if models.get_settings('pause_poller') == "True":
+                models.set_setting("poller_status", "PAUSING")
+            print("Starting poller for {0.node_name}...".format(node))
+            thread = Thread(target=poller_run, args=(node,), name='Poller-' + node.node_name)
+            # IS THIS NEEDED NOW THE TASK ENDS?? IF SO, USE daemon=None:
+            thread.daemon = True  # This kills the thread when main proc dies
+            thread.start()
+            time.sleep(10)
+
+        models.set_setting("poller_status", "STARTED")
+        # Testing sleep timer:
+        time.sleep(60)
+        # This is the correct sleep time (mins in settings,
+        # but sleep takes secs so *60).
+        # Can remove the int(), as the Model now has this:
+        #
+        # time.sleep(int(models.get_settings('poll_interval_mins')) * 60)
+
+
+def poller_init():
+    print("Initialising Poller...")
+    thread = Thread(target=poller_service, name='Poller_Service')
+    thread.daemon = True
+    thread.start()
 
 
 if __name__ == '__main__':

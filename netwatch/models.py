@@ -640,6 +640,10 @@ def add_settings(refresh, poll, dummy, pause):
             # Used to pause the poller thread:
             {'setting_name': 'pause_poller',
              'setting_value': pause
+             },
+            # Used to pause the poller thread:
+            {'setting_name': 'poller_status',
+             'setting_value': 'NOT STARTED'
              }
         ]
 
@@ -673,6 +677,12 @@ def get_settings(setting_name):
 
 def set_last_poll(time):
     query = Settings.update(setting_value=time).where(Settings.setting_name == "last_poll")
+    query.execute()
+    return
+
+
+def set_setting(setting_name, setting_value):
+    query = Settings.update(setting_value=setting_value).where(Settings.setting_name == setting_name)
     query.execute()
     return
 
