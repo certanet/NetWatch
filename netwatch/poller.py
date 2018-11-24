@@ -192,15 +192,16 @@ def poller_run(node):
     models.set_last_poll(datetime.now().strftime('%H:%M:%S'))
 
     if ping(node.ip_address):
-        models.set_node_status(node, True)  # Also sets last_seen to now()
+        node.set_node_status(True)  # Also sets last_seen to now()
 
-        if models.is_next_poll_now(node):  # True if next poll is before now(), this prevents rechecking a recently checked node
-            models.set_node_next_poll_relative(node, 15)  # Set next_poll to now()+15mins to allow for the rest to complete before running again
+        if node.is_next_poll_now():  # True if next poll is before now(), this prevents rechecking a recently checked node
+            node.set_next_poll_relative(15)  # Set next_poll to now()+15mins to allow for the rest to complete before running again
             logme("\n:::::::::::::" + node.ip_address + ":::::::::::::")
             backup_config = ssh_return_config(node)
             if (backup_config == "Device is unreachable.") or\
                     (backup_config == "Authentication failed."):
-                # Stop current node and continue to wait for poll setting timeout...
+                # Stop current node and wait for poll setting timeout
+                # Need to set node status to ERROR here, so can display on dash
                 return
             node.create_config(backup_config + "\n")
             backup_again = False
@@ -208,7 +209,8 @@ def poller_run(node):
             for rule in models.list_rules_for_node(node.id):
                 check_compliance = check_config_compliance(node,
                                                            rule)
-                # Only backs up config again once, rather than after each rule is remediated:
+                # Only backs up config again once,
+                # rather than after each rule is remediated:
                 if check_compliance['backup_again']:
                     backup_again = True
                 if check_compliance['compliant']:
@@ -219,14 +221,14 @@ def poller_run(node):
                 node.create_config(new_config + "\n")
 
             # Set next_poll to now()+24hrs...
-            models.set_node_next_poll_relative(node, 1440)
+            node.set_next_poll_relative(1440)
             # This also sets last_seen to now()...
-            models.set_node_status(node, True)
+            node.set_node_status(True)
 
     else:
-        models.set_node_status(node, False)
-        if models.is_next_poll_now(node): #True if next poll is before now(), this prevents setting a recently checked node to a sooner poll time
-            models.set_node_next_poll_relative(node, 0) #Set next_poll to now()+0mins, will not be checked until upto 5mins anyway as the Celery task should run 5mins, if set to now()+5mins the next Celery job may be before it
+        node.set_node_status(False)
+        if node.is_next_poll_now(): #True if next poll is before now(), this prevents setting a recently checked node to a sooner poll time
+            node.set_next_poll_relative(0) #Set next_poll to now()+0mins, will not be checked until upto 5mins anyway as the Celery task should run 5mins, if set to now()+5mins the next Celery job may be before it
 
 
 def poller_service():

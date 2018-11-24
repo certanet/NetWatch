@@ -276,6 +276,29 @@ class Node(DBModel):
         list_configs = Config.select().join(Node).where(Node.id == self.id).order_by(Config.saved_time.desc())
         return list_configs[0]
 
+    def is_next_poll_now(self):
+        now = datetime.datetime.now()
+        if self.next_poll < now:
+            poll_now = True
+        else:
+            poll_now = False
+        return poll_now
+
+    def set_node_status(self, status_bool):
+        if status_bool:
+            q = Node.update(last_seen=datetime.datetime.strftime(datetime.datetime.now(),'%Y-%m-%d %H:%M:%S')).where(Node.id == self.id)
+            q.execute()
+        q = Node.update(node_status=status_bool).where(Node.id == self.id)
+        q.execute()
+        return
+
+    def set_next_poll_relative(self, relative_time_in_mins):
+        now = datetime.datetime.now()
+        new_poll_time = now + datetime.timedelta(minutes=relative_time_in_mins)
+
+        q = Node.update(next_poll=new_poll_time).where(Node.id == self.id)
+        q.execute()
+        return
 
 def list_rules_for_node(called_node_id):
     called_node_rules = []
@@ -390,33 +413,6 @@ def list_compliant_nodes():
                 compliant_nodes.append(record.rule.id for record in query)
 
     return compliant_nodes
-
-
-def set_node_status(node_obj, status_bool):
-    if status_bool:
-        q = Node.update(last_seen=datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')).where(Node.id == node_obj.id)
-        q.execute()
-    q = Node.update(node_status=status_bool).where(Node.id == node_obj.id)
-    q.execute()
-    return
-
-
-def set_node_next_poll_relative(node, relative_time_in_mins):
-    now = datetime.datetime.now()
-    new_poll_time = now + datetime.timedelta(minutes=relative_time_in_mins)
-
-    q = Node.update(next_poll=new_poll_time).where(Node.id == node.id)
-    q.execute()
-    return
-
-
-def is_next_poll_now(node):
-    now = datetime.datetime.now()
-    if node.next_poll < now:
-        poll_now = True
-    else:
-        poll_now = False
-    return poll_now
 
 
 def create_node(node_name, ip_address):
