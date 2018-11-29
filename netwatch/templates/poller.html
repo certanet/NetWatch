@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+
+<h3 align="center">{{title}}</h3>
+
+<form method="post" action="/poller">
+
+    <h2 class="text-primary" style="display: inline;">Poller Status: </h2>
+
+            {% if poller_status == "STARTED" or poller_status == "RUNNING" %}
+            <p style="color:#b2c831; display:inline">{{ poller_status }}</p><br>
+            <input type="submit" name="poller-button" value="Pause">
+            {% elif poller_status == "PAUSED" %}
+            <p style="color:#f0ad4e; display:inline;">{{ poller_status }}</p><br>
+            <input type="submit" name="poller-button" value="Resume">
+            {% else %}
+            <p style="color:#fa1d2d; display:inline">{{ poller_status }}</p><br>
+            <p style="color:#fa1d2d">Control Unavailable</p>
+            {% endif %}
+
+</form>
+
+{% endblock %}

@@ -84,6 +84,26 @@ def tbc():
                            title='Coming Soon')
 
 
+@app.route('/poller', methods=['GET', 'POST'])
+def pollpage():
+    if request.method == 'POST':
+        if request.form.get('poller-button') == 'Pause':
+            models.set_setting('pause_poller', True)
+            # Set status manually, as it wan't refreshing on dashboard quickly:
+            models.set_setting('poller_status', "PAUSING")
+            result = ["Pausing Poller...", 'danger']
+        elif request.form.get('poller-button') == 'Resume':
+            models.set_setting('pause_poller', False)
+            models.set_setting('poller_status', "RUNNING")
+            result = ["Resuming Poller...", 'success']
+        flash(*result)
+        return redirect(url_for('home'))
+
+    return render_template('poller.html',
+                           title='Poller Control',
+                           poller_status=models.get_settings("poller_status"))
+
+
 @app.route('/rules/', defaults={'model': 'rules'})
 @app.route('/nodes/', defaults={'model': 'nodes'})
 @app.route('/connectionprofiles/', defaults={'model': 'connectionprofiles'})
