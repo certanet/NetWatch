@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, make_response
 from netwatch import app, models, forms, poller
 from socket import gethostname
 import datetime
@@ -260,6 +260,29 @@ def edit_model(slug, id):
         title='Edit ' + slug,
         form=form,
         my_model=my_model)
+
+
+@app.route("/configs/view/<id>", methods=('GET', 'POST'))
+def view_config(id):
+    config_obj = models.Config.get(models.Config.id == id)
+    form = forms.ConfigForm(obj=config_obj)
+    config_length = len(config_obj.config.split('\n'))
+
+    form.populate_obj(config_obj)
+
+    if request.method == 'POST':
+        if request.form['download'] == "Download":
+            file_download = make_response(config_obj.config)
+            file_download.headers["Content-Disposition"] =\
+                "attachment; filename={}-{}".format(config_obj.node.node_name,
+                                                    config_obj.config_name)
+            return file_download
+
+    return render_template('config_detail.html',
+                           title='Config Detail ',
+                           form=form,
+                           obj=config_obj,
+                           config_length=config_length)
 
 
 @app.route("/<slug>/delete", methods=('POST',))

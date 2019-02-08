@@ -8,6 +8,7 @@ class NodeForm(FlaskForm):
     ip_address = StringField('IP Address', validators=[DataRequired(), IPAddress(message='Must be a valid IPv4 address')])
     node_status = BooleanField('Status')
 
+
 class RuleForm(FlaskForm):
     rule_name = StringField('Rule Name', validators=[DataRequired(), Length(min=-1, max=20, message='You cannot have more than 20 characters')])
     rule_desc = StringField('Rule Description', validators=[DataRequired(), Length(min=-1, max=80, message='You cannot have more than 80 characters')])
@@ -20,6 +21,7 @@ class RuleForm(FlaskForm):
                                  validators=[DataRequired()])
     remediation_config = TextAreaField('Remediation Config', validators=[DataRequired(), Length(min=-1, max=200, message='You cannot have more than 200 characters')])
 
+
 class ConnectionProfileForm(FlaskForm):
     profile_name = StringField('Profile Name', validators=[DataRequired(), Length(min=-1, max=40, message='You cannot have more than 40 characters')])
     device_os = SelectField('Device OS',
@@ -29,3 +31,9 @@ class ConnectionProfileForm(FlaskForm):
     ssh_password = StringField('SSH Password', validators=[DataRequired(), Length(min=-1, max=200, message='You cannot have more than 200 characters')])
     ssh_enable = StringField('SSH Enable', validators=[DataRequired(), Length(min=-1, max=200, message='You cannot have more than 200 characters')])
     config_command = StringField('Config Command', validators=[DataRequired(), Length(min=-1, max=60, message='You cannot have more than 60 characters')])
+
+
+class ConfigForm(FlaskForm):
+    # node = StringField('Node')
+    # config_name = StringField('Config Name')
+    config = TextAreaField('Config')

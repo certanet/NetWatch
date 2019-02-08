@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+
+<form method="post">
+	<div class="page-header">
+	    <h1 class="text-primary" align="center">{{ obj.node.node_name }}-{{obj.config_name}} <input type="submit" class="btn btn-primary" name="download" value="Download">
+	    </h1>
+	</div>
+
+	{{ form.csrf_token }}
+	{% for field in form %}
+		{% if field.label.text != 'CSRF Token' %}
+		<div class="form-group{%if field.errors %} has-error{% endif %}"> 
+
+			{% if field.label.text == 'Node' %}
+				{{ field.label }}
+				{{ field(value=obj.node.node_name) }}
+			{% elif field.label.text == 'Config' %}
+				{{ field(class='form-control', readonly=true, rows=config_length) }}
+			{% else %}
+				{{ field(class='form-control') }}
+			{% endif %}
+ 
+			{% for error in field.errors %}
+				<span class="help-block">{{ error }}</span>
+			{% endfor %}
+		</div>
+		{% endif %}
+	{% endfor %}
+</form>
+
+{% endblock %}
