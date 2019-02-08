@@ -10,25 +10,20 @@ db.create_tables([Rule, Node, NodeRule, Settings, ConnectionProfile, Config],
 
 try:
     refresh = app.config['PAGE_REFRESH_SECS']
-except:
+except KeyError:
     refresh = 60
 try:
     poll = app.config['POLL_INTERVAL_MINS']
-except:
+except KeyError:
     poll = 60
 try:
     dummy = app.config['DUMMY_DATA']
-except:
+except KeyError:
     dummy = False
-try:
-    pause = app.config['PAUSE_POLLER']
-except:
-    pause = False
 
-add_settings(refresh, poll, dummy, pause)
+add_settings(refresh, poll, dummy)
 
 poller.poller_init()
 
 if __name__ == '__main__':
-
     app.run(host='0.0.0.0')

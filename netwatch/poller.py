@@ -238,9 +238,9 @@ def poller_service():
     while True:
         while models.get_settings('pause_poller') == "True":
             models.set_setting("poller_status", "PAUSED")
-            print("Poller paused!")
-            time.sleep(60)
-            print("Checking Poller status...")
+            # print("Poller paused!")
+            time.sleep(5)
+            # print("Checking Poller status...")
         models.set_setting("poller_status", "RUNNING")
         for node in models.list_all_nodes():
             if models.get_settings('pause_poller') == "True":

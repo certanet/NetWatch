@@ -592,7 +592,7 @@ class Settings(DBModel):
     setting_value = CharField(max_length=100)
 
 
-def add_settings(refresh, poll, dummy, pause):
+def add_settings(refresh, poll, dummy):
     try:
         current_salt = get_settings("secret_salt")
         print("Loaded existing settings!")
@@ -634,7 +634,7 @@ def add_settings(refresh, poll, dummy, pause):
              },
             # Used to pause the poller thread:
             {'setting_name': 'pause_poller',
-             'setting_value': pause
+             'setting_value': True
              },
             # Used to pause the poller thread:
             {'setting_name': 'poller_status',
