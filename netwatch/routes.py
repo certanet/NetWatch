@@ -84,6 +84,14 @@ def tbc():
                            title='Coming Soon')
 
 
+@app.route('/poller_status')
+def poller_status():
+
+    status = models.get_settings('poller_status')
+
+    return status
+
+
 @app.route('/poller', methods=['GET', 'POST'])
 def pollpage():
     if request.method == 'POST':

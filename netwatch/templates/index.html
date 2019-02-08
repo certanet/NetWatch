@@ -100,21 +100,12 @@
           <hr>
           <div class="serverstatus">
             <br>
-            <p>Poller Status: <b>
-            {% if poller_status == "STARTED" or poller_status == "RUNNING" %}
-            <ok>{{ poller_status }}</ok>
-            {% elif poller_status == "PAUSED" %}
-            <pending>{{ poller_status }}</pending>
-            {% else %}
-            <bad>{{ poller_status }}</bad>
-            {% endif %}
-            </b></p>
-
-            
+            <p style="display:inline;">Poller Status: 
+              <b><div id="poller_status" style="display:inline;"></div></b>
+            </p>
             <br>
 
             <p><bold>{{ no_active_pollers }}</bold> | Active Pollers</p>
-
 
             <p><bold>
             {% set testing_config_threshold = 50 %}
@@ -161,5 +152,33 @@
     </div>
         
 </div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+
+<script language="javascript" type="text/javascript">
+
+  function checkPollerStatus () {
+    $.get("{{ url_for('poller_status') }}", function(data){
+      $("#poller_status").text(data);
+      if(data == 'PAUSED'){
+        $("#poller_status").css({"color":"#f0ad4e"});
+      } else if(data == 'RUNNING' ||  data == 'RUNNING'){
+        $("#poller_status").css({"color":"#b2c831"});
+      } else {
+        $("#poller_status").css({"color":"#fa1d2d"});
+      } 
+    });
+  }
+
+  checkPollerStatus(); // run on page load
+
+  setInterval(function(){
+    checkPollerStatus()
+    }, 2000); // run every 2secs
+
+</script>
 
 {% endblock %}
