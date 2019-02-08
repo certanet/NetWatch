@@ -19,7 +19,9 @@
             <tr>
               <th>Node/Rule</th>
               {% for rule in rule_list %}
-                <th data-toggle="tooltip" title="{{ rule.rule_desc }}" style="word-break:break-word;">{{ rule.rule_name }}</th>
+                <th data-toggle="tooltip" title="{{ rule.rule_desc }}" style="word-break:break-word;">
+                    <a href="{{ url_for('edit_model', slug='rules', id=rule.id)}}"style="color: white">{{ rule.rule_name }}</a>
+              </th>
               {% endfor %}
               <th style="word-break:break-word;">Last Seen</th>
             </tr>
@@ -29,9 +31,14 @@
   -->
           {% for node in node_list %}
               <tr>
-                <td data-toggle="tooltip" title="{{ node.ip_address }}" class="left" style="white-space: nowrap">{% if node.node_status %}<ok>{{ node.node_name }}</ok>
-                {% else %}{{ node.node_name }}
-                {% endif %}</td>
+                <td data-toggle="tooltip" title="{{ node.ip_address }}" class="left" style="white-space: nowrap">
+                  <a href="{{ url_for('edit_model', slug='nodes', id=node.id)}}"
+                  {% if node.node_status %}
+                    ><ok>{{ node.node_name }}</ok></a>
+                  {% else %}
+                     style="color: white">{{ node.node_name }}</a>
+                  {% endif %}
+                </td>
 
                 {% for rule in rule_list %}
                   <td>{% if node_table[node.node_name][loop.index0] == "True" %}<ok>PASS</ok>
