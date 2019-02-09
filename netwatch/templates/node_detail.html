@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+
+<div class="page-header">
+    <h1 class="text-primary" align="center">{{ title }}: {{node.node_name}} <a href="{{ url_for('edit_model', slug='nodes', id=node.id) }}"><span class="text-success glyphicon glyphicon-edit"></span></a></h1>
+</div>
+
+<div class="row">
+    <div class="col-sm-6 col-lg-6">
+        <div class="dual-unit" style="height: 100px;">
+          <dtitle>Compliance Detail</dtitle>
+          <hr>
+          <table style="height:49%; width:100%">      
+            <tr>
+              {% for nrule in rule_list %}
+                <th data-toggle="tooltip" title="{{ nrule.rule.rule_desc }}" style="word-break:break-word;">
+                    <a href="{{ url_for('edit_model', slug='rules', id=nrule.rule.id)}}"style="color: white">{{ nrule.rule.rule_name }}</a>
+              </th>
+              {% endfor %}
+            </tr>
+
+              <tr>
+                {% for nrule in rule_list %}
+                  <td>{% if nrule.nr_status %}<ok>PASS</ok>
+                  {% elif nrule.nr_status == False and node.node_status == True %}<pending>PEND</pending>
+                  {% else %}<bad>FAIL</bad>
+                  {% endif %}</td>
+                {% endfor %}
+              </tr>
+        </table>
+      </div>
+    </div>
+
+
+    <div class="col-sm-6 col-lg-6">
+        <div class="dual-unit" style="height: 290px;">
+          <dtitle>Logs</dtitle>
+          <hr>
+          <table style="height:19%; width:100%">      
+            <tr>
+              <th>Date/Time</th>
+              <th>Level</th>
+              <th>Message</th>
+            </tr>
+
+            <tr>
+                <td style="width:10%">2019-01-01 00:00:02</td>
+                <td style="width:0%"><bad>ERR</bad></td>
+                <td style="width:120%; text-align: left">Something bad has happened</td>
+            </tr>
+            <tr>
+                <td style="width:35%">2019-01-01 00:00:01</td>
+                <td style="width:5%"><pending>WARN</pending></td>
+                <td style="width:120%; text-align: left">Something has happened</td>
+            </tr>
+        </table>
+      </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-6 col-lg-6" style="margin-top:-200px;">
+        <div class="dash-unit" style="height: 490px;">
+          <dtitle>Configs</dtitle>
+          <hr>
+          <table style="height:49%; width:100%">      
+            <tr>
+              <th>Config Name</th>
+              <th>Date/Time</th>
+              <th></th>
+            </tr>
+            {% for config in configs %}
+              <tr>
+                <td><a href="{{ url_for('view_config', id=config.id) }}" style="color: white">{{ config.config_name }}</a>
+                </td>
+                <td>{{ config.saved_time }}</td>
+                <td>Delete</td>
+              </tr>
+            {% endfor %}
+        </table>
+      </div>
+    </div>
+
+        <div class="col-sm-3 col-lg-3">
+        <div class="dash-unit">
+          <dtitle>Node Status</dtitle>
+          <hr>
+          <div class="clockcenter">
+            <p>
+              Last Seen: <b id="pollclock">{% if node.last_seen == None %} -
+                {% else %}{{ node.last_seen }}
+                {% endif %}</b><br>
+              Nex Poll: <b id="pollclock">{{ node.next_poll.strftime('%Y-%m-%d %H:%M') }}</b><br>
+              Last Refresh: <b id="refreshclock">--:--:--</b><br>
+            </p>
+            <br>
+            <div class="serverstatus">
+                <p style="display:inline;">Node Status: 
+                  <b>
+                    <div id="node_status" style="display:inline;">
+                        {% if node.node_status %}
+                            <ok>ONLINE</ok>
+                        {% else %}
+                            <bad>OFFLINE</bad>
+                        {% endif %}
+                    </div>
+                  </b>
+                  <p>Connection Profile: <b>{{node.connection_profile.profile_name}}</b><br>
+                  IP Address: <b>{{node.ip_address}}</b></p>
+                </p>
+
+                {% set testing_logs = 2 %}
+                <p><bold>{{ rule_list|length }}</bold> | Assigned Rules<br>
+                <bold>{{configs|length}}</bold> | Config Backups<br>
+                <bold>{{testing_logs}}</bold> | Logs</p>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- TOTALS BLOCK -->     
+    <div class="col-sm-3 col-lg-3">
+        <div class="dash-unit">
+          <dtitle>Compliance By Rule</dtitle>
+          <hr>
+          <div class="cont">
+            <p><bold>{{num_comp_rules}}</bold> | <ok>Compliant</ok></p>
+            <br>
+            <p><bold>{{num_pend_rules}}</bold> | <pending>Pending</pending></p>
+            <br>
+            <p><bold>{{num_fail_rules}}</bold> | <bad>Non-Compliant</bad></p>
+            <br>
+            <p><img src="{{ url_for('static', filename='img/up-small.png') }}" alt=""> {{percent_comp_rules}}% Compliant</p>
+            <p><img src="{{ url_for('static', filename='img/down-small.png') }}" alt=""> {{percent_fail_rules}}% Non-Compliant</p>
+          </div>
+        </div>
+    </div>
+        
+</div>
+
+{% endblock %}

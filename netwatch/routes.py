@@ -274,8 +274,7 @@ def view_config(id):
         if request.form['download'] == "Download":
             file_download = make_response(config_obj.config)
             file_download.headers["Content-Disposition"] =\
-                "attachment; filename={}-{}".format(config_obj.node.node_name,
-                                                    config_obj.config_name)
+                "attachment; filename={}".format(config_obj.config_name)
             return file_download
 
     return render_template('config_detail.html',
@@ -283,6 +282,34 @@ def view_config(id):
                            form=form,
                            obj=config_obj,
                            config_length=config_length)
+
+
+@app.route("/nodes/view/<id>")
+def view_node(id):
+    node_obj = models.Node.get(models.Node.id == id)
+    configs = node_obj.list_configs_for_node()
+    node_rule_list = node_obj.list_node_rules_for_node()
+
+    num_comp_rules = 0
+    num_pend_rules = 0
+    num_fail_rules = 0
+
+    for nrule in node_rule_list:
+        if nrule.nr_status:
+            num_comp_rules += 1
+        elif not nrule.nr_status and node_obj.node_status:
+            num_pend_rules += 1
+        else:
+            num_fail_rules += 1
+
+    return render_template('node_detail.html',
+                           title='Node Detail ',
+                           node=node_obj,
+                           configs=configs,
+                           rule_list=node_rule_list,
+                           num_comp_rules=num_comp_rules,
+                           num_pend_rules=num_pend_rules,
+                           num_fail_rules=num_fail_rules)
 
 
 @app.route("/<slug>/delete", methods=('POST',))

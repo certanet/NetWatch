@@ -323,6 +323,11 @@ class Node(DBModel):
 
         return node_rules
 
+    def list_configs_for_node(self):
+        node_configs = Config.select().where(Config.node == self.id)\
+            .order_by(Config.saved_time.desc())
+        return node_configs
+
 
 def list_online_nodes():
     record_set = Node.select().where(Node.node_status == True)

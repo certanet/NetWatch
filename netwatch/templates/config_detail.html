@@ -4,7 +4,7 @@
 
 <form method="post">
 	<div class="page-header">
-	    <h1 class="text-primary" align="center">{{ obj.node.node_name }}-{{obj.config_name}} <input type="submit" class="btn btn-primary" name="download" value="Download">
+	    <h1 class="text-primary" align="center"><button type="button" class="btn btn-danger" onclick="window.location.href = '{{ url_for('view_node', id=obj.node)}}';">&lt; Back to Node</button> {{obj.config_name}} <input type="submit" class="btn btn-primary" name="download" value="Download">
 	    </h1>
 	</div>
 
