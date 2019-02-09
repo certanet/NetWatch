@@ -77,13 +77,6 @@ class ConnectionProfile(DBModel):
 
 def list_all_connectionprofiles():
     all_profiles = ConnectionProfile.select().order_by(ConnectionProfile.profile_name)
-    """
-    record_set = ConnectionProfile.select()
-    all_profiles = []
-
-    for record in record_set:
-        all_profiles.append(record)
-    """
     return all_profiles
 
 
@@ -300,20 +293,35 @@ class Node(DBModel):
         q.execute()
         return
 
-def list_rules_for_node(called_node_id):
-    called_node_rules = []
+    def list_rules_for_node(self):
+        rules = []
 
-    record_set = (NodeRule
-                  .select(NodeRule, Rule)
-                  .join(Node)
-                  .switch(NodeRule)
-                  .join(Rule)
-                  .where(Node.id == called_node_id))
+        record_set = (NodeRule
+                      .select(NodeRule, Rule)
+                      .join(Node)
+                      .switch(NodeRule)
+                      .join(Rule)
+                      .where(Node.id == self.id))
 
-    for record in record_set:
-        called_node_rules.append(record.rule)
+        for record in record_set:
+            rules.append(record.rule)
 
-    return called_node_rules
+        return rules
+
+    def list_node_rules_for_node(self):
+        node_rules = []
+
+        record_set = (NodeRule
+                      .select(NodeRule, Rule)
+                      .join(Node)
+                      .switch(NodeRule)
+                      .join(Rule)
+                      .where(Node.id == self.id))
+
+        for record in record_set:
+            node_rules.append(record)
+
+        return node_rules
 
 
 def list_online_nodes():

@@ -209,7 +209,7 @@ def poller_run(node):
             node.create_config(backup_config + "\n")
             backup_again = False
 
-            for rule in models.list_rules_for_node(node.id):
+            for rule in node.list_rules_for_node():
                 check_compliance = check_config_compliance(node,
                                                            rule)
                 # Only backs up config again once,
