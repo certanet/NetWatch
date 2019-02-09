@@ -112,9 +112,9 @@
             </p>
             <br>
 
-            <p><bold>{{ no_active_pollers }}</bold> | Active Pollers</p>
+            <p><bold style="line-height: 0.8">{{ no_active_pollers }}</bold> | Active Pollers</p>
 
-            <p><bold>
+            <p><bold style="line-height: 0.8">
             {% set testing_config_threshold = 50 %}
             {% set testing_log_threshold = 100 %}
 
@@ -127,7 +127,7 @@
             {% endif %}
             / {{testing_config_threshold}}</bold> | Config Backups</p>
 
-            <p><bold>
+            <p><bold style="line-height: 0.8">
             {% if number_logs > ((testing_log_threshold / 100) * 85) %}
             <bad>{{ number_logs }}</bad>
             {% elif number_logs > ((testing_log_threshold / 100) * 70) %}
