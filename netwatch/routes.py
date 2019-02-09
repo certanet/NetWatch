@@ -303,7 +303,7 @@ def view_node(id):
             num_fail_rules += 1
 
     return render_template('node_detail.html',
-                           title='Node Detail ',
+                           title='Node Detail',
                            node=node_obj,
                            configs=configs,
                            rule_list=node_rule_list,

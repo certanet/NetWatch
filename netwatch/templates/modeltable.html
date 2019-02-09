@@ -1,12 +1,18 @@
 {% extends 'base.html' %}
 
 {% block page_content %}
+<style type="text/css">
+tr:hover {
+    color: #000;
+    background-color: #000;
+	}
+</style>
 
 <div class="page-header">
     <h1 class="text-primary" align="center">{{ title }} <a href="{{ url_for('new_model', slug=slug) }}"><span class="text-success glyphicon glyphicon-plus-sign"></span></a> </h1>
 </div>
 
-<div class="dash-unit">
+<div class="dash-unit" style="height: auto; padding-bottom: 0px">
 <table class="table table-hover">
 	<thead>
 		<tr>
