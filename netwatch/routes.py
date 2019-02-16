@@ -1,7 +1,18 @@
-from flask import render_template, redirect, url_for, flash, request, make_response
+from flask import render_template, redirect, url_for, flash, request, make_response, Markup
 from netwatch import app, models, forms, poller
 import datetime
 import psutil
+
+
+def getting_started(profile, node):
+    if not profile:
+        new_link = url_for('new_model', slug='connectionprofiles')
+        message = Markup("Looks like you haven't created a Connection Profile! Click <a href=\"{}\">here</a> to get started...".format(new_link))
+    elif not node:
+        new_link = url_for('new_model', slug='nodes')
+        message = Markup("Nearly there, but you haven't created any Nodes! Click <a href=\"{}\">here</a> to get started...".format(new_link))
+    result = [message, 'warning']
+    flash(*result)
 
 
 @app.route('/')
@@ -9,7 +20,11 @@ def home():
 
     node_list = models.list_all_nodes()
     rule_list = models.list_all_rules()
+    profile_list = models.list_all_connectionprofiles()
     node_table = models.dict_node_table()
+
+    if not profile_list or not node_list:
+        getting_started(profile_list, node_list)
 
     number_node_online = len(models.list_online_nodes())
 
