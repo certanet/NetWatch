@@ -44,16 +44,22 @@
               <th>Message</th>
             </tr>
 
+            {% for log in node.logs|sort(attribute='date_time', reverse=True) %}
             <tr>
-                <td style="width:10%">2019-01-01 00:00:02</td>
-                <td style="width:0%"><bad>ERR</bad></td>
-                <td style="width:120%; text-align: left">Something bad has happened</td>
+                <td style="width:35%">{{ log.date_time }}</td>
+                <td style="width:5%">
+                  {% if log.level == 'WARN' %}
+                  <pending>{{ log.level }}</pending>
+                  {% elif log.level == 'ERR' %}
+                  <bad>{{ log.level }}</bad>
+                  {% else %}
+                  {{ log.level }}
+                  {% endif %}
+                </td>
+                <td style="width:120%; text-align: left">{{ log.message }}</td>
             </tr>
-            <tr>
-                <td style="width:35%">2019-01-01 00:00:01</td>
-                <td style="width:5%"><pending>WARN</pending></td>
-                <td style="width:120%; text-align: left">Something has happened</td>
-            </tr>
+            {% endfor %}
+
         </table>
       </div>
     </div>
@@ -110,10 +116,9 @@
                   IP Address: <b>{{node.ip_address}}</b></p>
                 </p>
 
-                {% set testing_logs = 2 %}
                 <p><bold>{{ rule_list|length }}</bold> | Assigned Rules<br>
                 <bold>{{configs|length}}</bold> | Config Backups<br>
-                <bold>{{testing_logs}}</bold> | Logs</p>
+                <bold>{{node.logs|length}}</bold> | Logs</p>
             </div>
           </div>
         </div>

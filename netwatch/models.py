@@ -278,11 +278,21 @@ class Node(DBModel):
         return poll_now
 
     def set_node_status(self, status_bool):
+        status = 'OFFLINE'
+        log_level = 'ERR'
         if status_bool:
             q = Node.update(last_seen=datetime.datetime.strftime(datetime.datetime.now(),'%Y-%m-%d %H:%M:%S')).where(Node.id == self.id)
+            status = 'ONLINE'
+            log_level = 'INFO'
+
+        if self.node_status != status_bool:
+            q = Node.update(node_status=status_bool).where(Node.id == self.id)
+            self.create_log('Node status changed to {}'.format(status), log_level)
+
+        try:
             q.execute()
-        q = Node.update(node_status=status_bool).where(Node.id == self.id)
-        q.execute()
+        except UnboundLocalError:
+            pass
         return
 
     def set_next_poll_relative(self, relative_time_in_mins):
@@ -327,6 +337,13 @@ class Node(DBModel):
         node_configs = Config.select().where(Config.node == self.id)\
             .order_by(Config.saved_time.desc())
         return node_configs
+
+    def create_log(self, message, level='INFO'):
+        log = Log.create(node=self,
+                         date_time=datetime.datetime.strftime(datetime.datetime.now(),'%Y-%m-%d %H:%M:%S'),
+                         message=message,
+                         level=level)
+        return log
 
 
 def list_online_nodes():
@@ -753,6 +770,13 @@ def list_all_configs():
         configs.append(record)
 
     return configs
+
+
+class Log(DBModel):
+    node = ForeignKeyField(Node, backref='logs')
+    date_time = CharField(max_length=50)
+    level = CharField(max_length=10)
+    message = TextField()
 
 
 """

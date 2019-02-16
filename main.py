@@ -5,7 +5,7 @@ from netwatch.secrets import *
 from netwatch import poller
 
 
-db.create_tables([Rule, Node, NodeRule, Settings, ConnectionProfile, Config],
+db.create_tables([Rule, Node, NodeRule, Settings, ConnectionProfile, Config, Log],
                  safe=True)
 
 try:
