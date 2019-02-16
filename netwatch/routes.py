@@ -158,13 +158,21 @@ def new_model(slug):
     if slug == "nodes":
         title = "Node"
         form = forms.NodeForm()
+        profile_choices = []
+        all_profiles = models.list_all_connectionprofiles()
+        for profile in all_profiles:
+            profile_choices.append((profile.id, profile.profile_name))
+
+        form.connection_profile.choices = profile_choices
+
         if form.validate_on_submit():
             # Get form:
             node_name = form.node_name.data
             ip_address = form.ip_address.data
+            connection_profile = form.connection_profile.data
             # Save in database:
             try:
-                result = models.create_node(node_name, ip_address)
+                result = models.create_node(node_name, ip_address, connection_profile)
                 flash(*result)
                 return redirect(url_for('modeltable', model=slug))
             except:
@@ -212,19 +220,6 @@ def new_model(slug):
 
 @app.route("/<slug>/edit/<id>", methods=('GET', 'POST'))
 def edit_model(slug, id):
-    if slug == "nodes":
-        my_model = models.get_node(id)
-        form = forms.NodeForm(obj=my_model)
-
-        if form.validate_on_submit():
-            form.populate_obj(my_model)
-            try:
-                result = models.update_node(my_model)
-                flash(*result)
-                return redirect(url_for('modeltable', model=slug))
-            except:
-                flash(*result)
-
     if slug == "rules":
         my_model = models.get_rule(id)
         form = forms.RuleForm(obj=my_model)
@@ -327,6 +322,45 @@ def delete_model(slug):
         except:
             flash(*result)
         return redirect(url_for('modeltable', model='connectionprofiles'))
+
+
+@app.route("/nodes/edit/<id>", methods=('GET', 'POST'))
+def node_edit(id):
+    node_obj = models.get_node(id)
+    form = forms.NodeForm(obj=node_obj)
+
+    profile_choices = []
+    all_profiles = models.list_all_connectionprofiles()
+    for profile in all_profiles:
+        profile_choices.append((profile.id, profile.profile_name))
+
+    form.connection_profile.choices = profile_choices
+
+    if form.validate_on_submit():
+        form.populate_obj(node_obj)
+
+        result = models.update_node(node_obj)
+        flash(*result)
+        return redirect(url_for('home'))
+
+    rules = models.list_all_rules()
+    noderule_list = node_obj.list_node_rules_for_node()
+    noderule_list_rules = []
+    noderule_dict_auto = {}
+
+    for nr in noderule_list:
+        noderule_list_rules.append(nr.rule)
+
+    for nr in noderule_list:
+        noderule_dict_auto[nr.rule] = nr.auto_remediate
+
+    return render_template('node_edit.html',
+                           title='Edit',
+                           form=form,
+                           node=node_obj,
+                           rules=rules,
+                           noderule_list_rules=noderule_list_rules,
+                           noderule_dict_auto=noderule_dict_auto)
 
 
 # Error page routes

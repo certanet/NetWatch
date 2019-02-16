@@ -5,8 +5,12 @@ from wtforms.validators import DataRequired, Length, IPAddress
 
 class NodeForm(FlaskForm):
     node_name = StringField('Node Name', validators=[DataRequired(), Length(min=-1, max=20, message='You cannot have more than 20 characters')])
-    ip_address = StringField('IP Address', validators=[DataRequired(), IPAddress(message='Must be a valid IPv4 address')])
-    node_status = BooleanField('Status')
+    ip_address = StringField('IP Address',
+                             validators=[DataRequired(),
+                                         IPAddress(message='Must be a valid IPv4 address')])
+    # node_status = BooleanField('Status')
+    # CANNOT GET THIS TO SHOW THE NODE'S CURRENT VALUE!!!!...
+    connection_profile = SelectField('Connection Profile', coerce=int)
 
 
 class RuleForm(FlaskForm):

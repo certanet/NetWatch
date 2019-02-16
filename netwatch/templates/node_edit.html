@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+<style type="text/css">
+tr:hover {
+    color: #000;
+    background-color: #000;
+	}
+</style>
+
+<div class="page-header">
+    <h1 class="text-primary" align="center">{{ title }}: {{node.node_name}}</h1>
+</div>
+
+<form method="post">
+	{{ form.csrf_token }}
+	{% for field in form %}
+		{% if field.label.text != 'CSRF Token' %}
+		<div class="form-group{%if field.errors %} has-error{% endif %}">
+			{{ field.label }} 
+			{{ field(class='form-control') }}
+			{% for error in field.errors %}
+				<span class="help-block">{{ error }}</span>
+			{% endfor %}
+		</div>
+		{% endif %}
+	{% endfor %}
+
+<br><br>
+
+	<div class="dash-unit" style="height: auto; padding-bottom: 0px">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th scope="col">Rule Name</th>
+					<th scope="col">Enabled</th>
+					<th scope="col">Auto Remediate</th>
+					<th scope="col">Rule Description</th>
+					<td></td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for rule in rules %}
+				<tr>
+					<td>{{ rule.rule_name }}</td>
+					<td><input type="checkbox"{% if rule in noderule_list_rules %}checked="checked"{% endif %}>
+					</td>
+					<td>{% if rule in noderule_list_rules %}
+						    {% if noderule_dict_auto[rule] %}
+						    	<input type="checkbox" checked="checked">
+						    {% else %}
+						    	<input type="checkbox">
+						    {% endif %}
+						    {{ noderule_dict_auto[rule] }}
+						{% else %}N/A{% endif %}
+					</td>
+					<td>{{ rule.rule_desc }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<input type="submit" class="btn btn-success" value="Save">
+</form>
+
+{% endblock %}

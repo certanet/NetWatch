@@ -445,9 +445,10 @@ def list_compliant_nodes():
     return compliant_nodes
 
 
-def create_node(node_name, ip_address):
+def create_node(node_name, ip_address, connection_profile):
     data_dict = dict(node_name=node_name,
-                     ip_address=ip_address)
+                     ip_address=ip_address,
+                     connection_profile=connection_profile)
 
     try:
         created = Node.get_or_create(**data_dict)
@@ -468,12 +469,14 @@ def get_node(node_id):
 
 def update_node(node):
     data_dict = dict(node_name=node.node_name,
-                     ip_address=node.ip_address)
+                     ip_address=node.ip_address,
+                     connection_profile=node.connection_profile)
 
     try:
         query = Node.update(**data_dict).where(Node.id == node.id)
         query.execute()
         result = ["Node \"{0.node_name}\" Updated!".format(node), 'success']
+        node.create_log("Node edited!")
     except:
         result = ["Update Failed!", 'danger']
     return result
@@ -500,8 +503,8 @@ def delete_node(id):
 
 
 class NodeRule(DBModel):
-    node = ForeignKeyField(Node)
-    rule = ForeignKeyField(Rule)
+    node = ForeignKeyField(Node, backref='rules')
+    rule = ForeignKeyField(Rule, backref='nodes')
     nr_status = BooleanField(default=False)
     auto_remediate = BooleanField(default=False)
 
