@@ -323,20 +323,20 @@ def view_node(id):
 @app.route("/<slug>/delete", methods=('POST',))
 def delete_model(slug):
     if slug == "nodes":
-        try:
-            result = models.delete_node(id=request.form['id'])
-            flash(*result)
-        except:
-            flash(*result)
+        node_obj = models.get_node(request.form['id'])
+        result = node_obj.delete_self()
+        flash(*result)
         return redirect(url_for('modeltable', model='nodes'))
-
     if slug == "connectionprofiles":
-        try:
-            result = models.delete_connectionprofile(profile_id=request.form['id'])
-            flash(*result)
-        except:
-            flash(*result)
+        prof_obj = models.get_connectionprofile(request.form['id'])
+        result = prof_obj.delete_self()
+        flash(*result)
         return redirect(url_for('modeltable', model='connectionprofiles'))
+    if slug == "rules":
+        rule_obj = models.get_rule(request.form['id'])
+        result = rule_obj.delete_self()
+        flash(*result)
+        return redirect(url_for('modeltable', model='rules'))
 
 
 @app.route("/nodes/edit/<id>", methods=('GET', 'POST'))

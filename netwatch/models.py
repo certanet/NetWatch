@@ -74,6 +74,15 @@ class ConnectionProfile(DBModel):
     def __repr__(self):
         return self.profile_name
 
+    def delete_self(self):
+        try:
+            self.delete_instance()
+            result = ["Connection Profile \"{0.profile_name}\" Deleted!".format(self),
+                      'success']
+        except:
+            result = ["Delete Failed!", 'danger']
+        return result
+
 
 def list_all_connectionprofiles():
     all_profiles = ConnectionProfile.select().order_by(ConnectionProfile.profile_name)
@@ -99,16 +108,6 @@ def update_connectionprofile(profile):
         result = ["Connection Profile \"{0.profile_name}\" Updated!".format(profile), 'success']
     except:
         result = ["Update Failed!", 'danger']
-    return result
-
-
-def delete_connectionprofile(profile_id):
-    try:
-        prof_obj = ConnectionProfile.get(ConnectionProfile.id == profile_id)
-        prof_obj.delete_instance()
-        result = ["Connection Profile \"{0.profile_name}\" Deleted!".format(prof_obj), 'success']
-    except:
-        result = ["Delete Failed!", 'danger']
     return result
 
 
@@ -171,6 +170,15 @@ class Rule(DBModel):
     remediation_config = TextField()
     # These should both be normalised (re escaped)
     # so Netmiko can parse them in poller.py
+
+    def delete_self(self):
+        try:
+            self.delete_instance()
+            result = ["Rule \"{0.rule_name}\" Deleted!".format(self),
+                      'success']
+        except:
+            result = ["Delete Failed!", 'danger']
+        return result
 
 
 def list_all_rules():
@@ -345,6 +353,15 @@ class Node(DBModel):
                          level=level)
         return log
 
+    def delete_self(self):
+        try:
+            self.delete_instance()
+            result = ["Node \"{0.node_name}\" Deleted!".format(self),
+                      'success']
+        except:
+            result = ["Delete Failed!", 'danger']
+        return result
+
 
 def list_online_nodes():
     record_set = Node.select().where(Node.node_status == True)
@@ -479,16 +496,6 @@ def update_node(node):
         node.create_log("Node edited!")
     except:
         result = ["Update Failed!", 'danger']
-    return result
-
-
-def delete_node(id):
-    try:
-        obj = Node.get(Node.id == id)
-        obj.delete_instance()
-        result = ["Node \"{0.node_name}\" Deleted!".format(obj), 'success']
-    except:
-        result = ["Delete Failed!", 'danger']
     return result
 
 
