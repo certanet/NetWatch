@@ -377,10 +377,11 @@ def node_edit(id):
 
         for rule_obj in noderule_list_rules:
             nr = models.get_noderule(node_obj, rule_obj)
-            if request.form.get('auto{}'.format(rule_obj.id)):
-                nr.set_noderule_auto(True)
-            else:
-                nr.set_noderule_auto(False)
+            if nr is not None:
+                if request.form.get('auto{}'.format(rule_obj.id)):
+                    nr.set_noderule_auto(True)
+                else:
+                    nr.set_noderule_auto(False)
 
         return redirect(url_for('node_edit', id=id))
 
