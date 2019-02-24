@@ -257,13 +257,14 @@ def poller_service():
                 models.set_setting("poller_status", "PAUSED")
         else:
             models.set_setting("poller_status", "STARTED")
-        # Testing sleep timer:
-        time.sleep(60)
-        # This is the correct sleep time (mins in settings,
-        # but sleep takes secs so *60).
-        # Can remove the int(), as the Model now has this:
-        #
-        # time.sleep(int(models.get_settings('poll_interval_mins')) * 60)
+
+        # Sleep the poller until number of mins in settings, checking if paused
+        # every second
+        poll_interval = models.get_settings('poll_interval_mins')
+        for check in range(1, (int(poll_interval) * 60)):
+            time.sleep(1)
+            if models.get_settings('pause_poller') == "True":
+                break
 
 
 def poller_init():
