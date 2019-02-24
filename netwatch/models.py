@@ -525,6 +525,24 @@ class NodeRule(DBModel):
         query.execute()
         return
 
+    def set_noderule_auto(self, auto_status):
+        query = NodeRule.update(auto_remediate=auto_status)\
+            .where(NodeRule.id == self.id)
+        query.execute()
+        return
+
+
+def create_node_rule(node_obj, rule_obj):
+    # Takes a Node and a Rule and creates a
+    # NodeRule (attaches Rule to the Node)
+
+    nr_status = False
+    created = NodeRule.get_or_create(node=node_obj,
+                                     rule=rule_obj)
+    if created[1] == False:
+        query = created[0].update(nr_status=nr_status).where(NodeRule.id == created[0].id)
+        query.execute()
+
 
 
 def add_node_rules(node_id, rule_ids):

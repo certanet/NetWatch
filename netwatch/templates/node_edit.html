@@ -12,7 +12,7 @@ tr:hover {
     <h1 class="text-primary" align="center">{{ title }}: {{node.node_name}}</h1>
 </div>
 
-<form method="post">
+<form method="post" action="/nodes/edit/{{node.id}}">
 	{{ form.csrf_token }}
 	{% for field in form %}
 		{% if field.label.text != 'CSRF Token' %}
@@ -43,15 +43,13 @@ tr:hover {
 			{% for rule in rules %}
 				<tr>
 					<td>{{ rule.rule_name }}</td>
-					<td><input type="checkbox"{% if rule in noderule_list_rules %}checked="checked"{% endif %}>
+					<td><input type="checkbox"  name="{{rule}}" {% if rule in noderule_list_rules %}checked="checked"{% endif %}>
 					</td>
-					<td>{% if rule in noderule_list_rules %}
-						    {% if noderule_dict_auto[rule] %}
-						    	<input type="checkbox" checked="checked">
-						    {% else %}
-						    	<input type="checkbox">
-						    {% endif %}
-						    {{ noderule_dict_auto[rule] }}
+					<td>
+						{% if rule in noderule_list_rules %}
+						<input type="checkbox" name="auto{{rule}}" {% if noderule_dict_auto[rule] %}
+						    	checked="checked"
+						    {% endif %}>
 						{% else %}N/A{% endif %}
 					</td>
 					<td>{{ rule.rule_desc }}</td>

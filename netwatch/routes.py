@@ -351,13 +351,6 @@ def node_edit(id):
 
     form.connection_profile.choices = profile_choices
 
-    if form.validate_on_submit():
-        form.populate_obj(node_obj)
-
-        result = models.update_node(node_obj)
-        flash(*result)
-        return redirect(url_for('home'))
-
     rules = models.list_all_rules()
     noderule_list = node_obj.list_node_rules_for_node()
     noderule_list_rules = []
@@ -368,6 +361,28 @@ def node_edit(id):
 
     for nr in noderule_list:
         noderule_dict_auto[nr.rule] = nr.auto_remediate
+
+    if form.validate_on_submit():
+        form.populate_obj(node_obj)
+        result = models.update_node(node_obj)
+        flash(*result)
+
+        for rule_obj in rules:
+            if request.form.get(str(rule_obj.id)):
+                if rule_obj not in noderule_list_rules:
+                    models.create_node_rule(node_obj, rule_obj)
+            else:
+                if rule_obj in noderule_list_rules:
+                    models.delete_noderule(node_obj.id, rule_obj.id)
+
+        for rule_obj in noderule_list_rules:
+            nr = models.get_noderule(node_obj, rule_obj)
+            if request.form.get('auto{}'.format(rule_obj.id)):
+                nr.set_noderule_auto(True)
+            else:
+                nr.set_noderule_auto(False)
+
+        return redirect(url_for('node_edit', id=id))
 
     return render_template('node_edit.html',
                            title='Edit',

@@ -41,7 +41,7 @@
                 </td>
 
                 {% for rule in rule_list %}
-                  <td>{% if node_table[node.node_name][loop.index0] == "True" %}<ok>PASS</ok>
+                  <td data-toggle="tooltip" title="Auto: TBC" class="left" style="white-space: nowrap">{% if node_table[node.node_name][loop.index0] == "True" %}<ok>PASS</ok>
                   {% elif node_table[node.node_name][loop.index0] == "-" %}-
                   {% elif node_table[node.node_name][loop.index0] == "False" and node.node_status == True %}<pending>PEND</pending>
                   {% else %}<bad>FAIL</bad>
