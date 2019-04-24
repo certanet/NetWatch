@@ -650,11 +650,11 @@ class Settings(DBModel):
     setting_value = CharField(max_length=100)
 
 
-def add_settings(refresh, poll, dummy):
+def add_settings(dummy):
     try:
-        current_salt = get_settings("secret_salt")
+        get_settings("secret_salt")
         print("Loaded existing settings!")
-    except:
+    except DoesNotExist:
         print("No existing settings found...")
         secret_salt = secrets.generate_salt()
 
@@ -671,11 +671,11 @@ def add_settings(refresh, poll, dummy):
         settings = [
             # Used in head of index.html to set page refresh rate...
             {'setting_name': 'dash_refresh_rate_secs',
-             'setting_value': int(refresh)
+             'setting_value': 60
              },
             # This is for ICMP only as SSH poll is set auto via node.next_poll:
             {'setting_name': 'poll_interval_mins',
-             'setting_value': int(poll)
+             'setting_value': 60
              },
             # Used in poller.py to check compliance against start or
             # running config  - startup is preffered:
