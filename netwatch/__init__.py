@@ -25,7 +25,7 @@ if app.config['SECRET_KEY'] is not None:
 else:
     # If a secret key env var is not set, then try a config file:
     try:
-        app.config.from_object('config')
+        app.config.from_object('data.config')
         if app.config['SECRET_KEY'] is None:
             raise ImportError
     except ImportError:
@@ -44,7 +44,7 @@ app.config['ABOUT_VER'] = '0.4'
 if 'DB_NAME' not in app.config:
     from peewee import SqliteDatabase
     app.config['ABOUT_DB'] = 'N/A (SQLITE)'
-    db = SqliteDatabase('netwatch.db')
+    db = SqliteDatabase('data/netwatch.db')
 else:
     from peewee import PostgresqlDatabase
     app.config['ABOUT_DB'] = app.config['DB_NAME']
