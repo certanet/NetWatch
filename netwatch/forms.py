@@ -36,7 +36,7 @@ class RuleForm(FlaskForm):
     regex = BooleanField('Regex')
     # The coerce int allows the values to be set to True/False:
     found_in_config = RadioField('Match Type',
-                                 coerce=bool,
+                                 coerce=int,
                                  choices=[(1, 'Voilate if found'),
                                           (0, 'Voilate if NOT found')],
                                  default=0)
