@@ -48,11 +48,11 @@ class RuleForm(FlaskForm):
 
 
 class ConnectionProfileForm(FlaskForm):
-    profile_name = StringField('Profile Name',
-                               validators=[DataRequired(),
-                                           Length(min=-1,
-                                                  max=40,
-                                                  message='You cannot have more than 40 characters')])
+    name = StringField('Profile Name',
+                       validators=[DataRequired(),
+                                   Length(min=-1,
+                                          max=40,
+                                          message='You cannot have more than 40 characters')])
     device_os = SelectField('Device OS',
                             choices=[('cisco_ios', 'Cisco IOS'),
                                      ('juniper_junos', 'JUNOS'),

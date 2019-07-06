@@ -61,7 +61,7 @@ def list_columns_for(model):
 class ConnectionProfile(DBModel):
     # Credentials attached to a Node, used to connect to devices via Netmiko...
 
-    profile_name = CharField(unique=True, max_length=50)
+    name = CharField(unique=True, max_length=50)
     # Used to set the Netmiko device type:
     device_os = CharField(max_length=50)
     ssh_username = CharField(max_length=50)
@@ -72,19 +72,19 @@ class ConnectionProfile(DBModel):
     port_num = IntegerField(default=22)
 
     def __repr__(self):
-        return self.profile_name
+        return self.name
 
     def delete_self(self):
         try:
             self.delete_instance()
-            result = ["Connection Profile \"{0.profile_name}\" Deleted!".format(self),
+            result = ["Connection Profile \"{0.name}\" Deleted!".format(self),
                       'success']
         except:
             result = ["Delete Failed!", 'danger']
         return result
 
     def edit(self):
-        data_dict = dict(profile_name=self.profile_name,
+        data_dict = dict(name=self.name,
                          device_os=self.device_os,
                          ssh_username=self.ssh_username,
                          ssh_password=self.ssh_password,
@@ -93,37 +93,20 @@ class ConnectionProfile(DBModel):
         try:
             query = ConnectionProfile.update(**data_dict).where(ConnectionProfile.id == self.id)
             query.execute()
-            result = ["Connection Profile \"{0.profile_name}\" Updated!".format(self), 'success']
+            result = ["Connection Profile \"{0.name}\" Updated!".format(self), 'success']
         except:
             result = ["Update Failed!", 'danger']
         return result
 
 
 def list_all_connectionprofiles():
-    all_profiles = ConnectionProfile.select().order_by(ConnectionProfile.profile_name)
+    all_profiles = ConnectionProfile.select().order_by(ConnectionProfile.name)
     return all_profiles
 
 
 def get_connectionprofile(profile_id):
     prof_obj = ConnectionProfile.get(ConnectionProfile.id == profile_id)
     return prof_obj
-
-
-def create_connectionprofile(profile_dict):
-
-    try:
-        profile_dict['ssh_password'] =\
-            str(encrypt_creds(profile_dict['ssh_password']))
-        profile_dict['ssh_enable'] =\
-            str(encrypt_creds(profile_dict['ssh_enable']))
-
-        profile = ConnectionProfile.create(**profile_dict)
-        profile.save()
-        result = ["Connection Profile \"{0.profile_name}\" Created!"
-                  .format(profile), 'success']
-    except:
-        result = ["Create Failed!", 'danger']
-    return result
 
 
 def encrypt_creds(pt):

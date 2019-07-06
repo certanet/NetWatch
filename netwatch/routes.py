@@ -167,7 +167,7 @@ def new_model(slug):
         profile_choices = []
         all_profiles = models.list_all_connectionprofiles()
         for profile in all_profiles:
-            profile_choices.append((profile.id, profile.profile_name))
+            profile_choices.append((profile.id, profile.name))
 
         form.connection_profile.choices = profile_choices
 
@@ -184,6 +184,10 @@ def new_model(slug):
     if form.validate_on_submit():
         # Populate the new object with the form data and try to save to DB:
         try:
+            if slug == "connectionprofiles":
+                form.ssh_password.data = str(models.encrypt_creds(form.ssh_password.data))
+                form.ssh_enable.data = str(models.encrypt_creds(form.ssh_enable.data))
+
             form.populate_obj(new_obj)
             new_obj.save()
             result = ["{0} \"{1.name}\" Created!".format(title, new_obj), 'success']
@@ -300,7 +304,7 @@ def node_edit(id):
     profile_choices = []
     all_profiles = models.list_all_connectionprofiles()
     for profile in all_profiles:
-        profile_choices.append((profile.id, profile.profile_name))
+        profile_choices.append((profile.id, profile.name))
 
     form.connection_profile.choices = profile_choices
 
