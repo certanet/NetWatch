@@ -42,7 +42,7 @@ tr:hover {
 			<tbody>
 			{% for rule in rules %}
 				<tr>
-					<td>{{ rule.rule_name }}</td>
+					<td>{{ rule.name }}</td>
 					<td><input type="checkbox"  name="{{rule}}" {% if rule in noderule_list_rules %}checked="checked"{% endif %}>
 					</td>
 					<td>

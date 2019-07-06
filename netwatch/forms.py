@@ -18,11 +18,11 @@ class NodeForm(FlaskForm):
 
 
 class RuleForm(FlaskForm):
-    rule_name = StringField('Rule Name',
-                            validators=[DataRequired(),
-                                        Length(min=-1,
-                                               max=20,
-                                               message='You cannot have more than 20 characters')])
+    name = StringField('Rule Name',
+                       validators=[DataRequired(),
+                                   Length(min=-1,
+                                          max=20,
+                                          message='You cannot have more than 20 characters')])
     rule_desc = StringField('Rule Description',
                             validators=[DataRequired(),
                                         Length(min=-1,

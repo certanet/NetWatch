@@ -139,7 +139,7 @@ class Poller:
                               node_config.config)  # Gets latest config!
 
             if match is None:
-                self.logme("{0.rule_name} - Not Compliant!".format(rule))
+                self.logme("{0.name} - Not Compliant!".format(rule))
                 noderule.set_noderule_status(compliant)
                 # Checks if NR is enabled for auto remediate and executes:
                 if noderule.auto_remediate:
@@ -147,7 +147,7 @@ class Poller:
                     backup_again = True
                     compliant = True
             else:
-                self.logme("{0.rule_name} - Compliant!".format(rule))
+                self.logme("{0.name} - Compliant!".format(rule))
                 backup_again = False
                 compliant = True
         else:
@@ -155,11 +155,11 @@ class Poller:
                               node_config.config)
 
             if match is None:
-                self.logme("{0.rule_name} - Compliant!".format(rule))
+                self.logme("{0.name} - Compliant!".format(rule))
                 backup_again = False
                 compliant = True
             else:
-                self.logme("{0.rule_name} - Not Compliant!".format(rule))
+                self.logme("{0.name} - Not Compliant!".format(rule))
                 noderule.set_noderule_status(compliant)
                 # Checks if NR is enabled for auto remediate and executes:
                 if noderule.auto_remediate:

@@ -20,7 +20,7 @@
               <th>Node/Rule</th>
               {% for rule in rule_list %}
                 <th data-toggle="tooltip" title="{{ rule.rule_desc }}" style="word-break:break-word;">
-                    <a href="{{ url_for('edit_model', slug='rules', id=rule.id)}}"style="color: white">{{ rule.rule_name }}</a>
+                    <a href="{{ url_for('edit_model', slug='rules', id=rule.id)}}"style="color: white">{{ rule.name }}</a>
               </th>
               {% endfor %}
               <th style="word-break:break-word;">Last Seen</th>

@@ -15,7 +15,7 @@
             <tr>
               {% for nrule in rule_list %}
                 <th data-toggle="tooltip" title="{{ nrule.rule.rule_desc }}" style="word-break:break-word;">
-                    <a href="{{ url_for('edit_model', slug='rules', id=nrule.rule.id)}}"style="color: white">{{ nrule.rule.rule_name }}</a>
+                    <a href="{{ url_for('edit_model', slug='rules', id=nrule.rule.id)}}"style="color: white">{{ nrule.rule.name }}</a>
               </th>
               {% endfor %}
             </tr>

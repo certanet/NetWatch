@@ -158,7 +158,7 @@ def decrypt_creds(ct):
 
 
 class Rule(DBModel):
-    rule_name = CharField(unique=True, max_length=30)
+    name = CharField(unique=True, max_length=30)
     rule_desc = CharField(null=True)
     config = TextField()
     regex = BooleanField(default=False)
@@ -172,14 +172,14 @@ class Rule(DBModel):
     def delete_self(self):
         try:
             self.delete_instance()
-            result = ["Rule \"{0.rule_name}\" Deleted!".format(self),
+            result = ["Rule \"{0.name}\" Deleted!".format(self),
                       'success']
         except:
             result = ["Delete Failed!", 'danger']
         return result
 
     def edit(self):
-        data_dict = dict(rule_name=self.rule_name,
+        data_dict = dict(name=self.name,
                          rule_desc=self.rule_desc,
                          config=self.config,
                          regex=self.regex,
@@ -188,9 +188,17 @@ class Rule(DBModel):
         try:
             query = Rule.update(**data_dict).where(Rule.id == self.id)
             query.execute()
-            result = ["Rule \"{0.rule_name}\" Updated!".format(self), 'success']
+            result = ["Rule \"{0.name}\" Updated!".format(self), 'success']
         except:
             result = ["Update Failed!", 'danger']
+        return result
+
+    def new(self):
+        try:
+            self.save()
+            result = ["Rule \"{0.name}\" Created!".format(self), 'success']
+        except:
+            result = ["Create Failed!", 'danger']
         return result
 
 
@@ -207,30 +215,6 @@ def list_all_rules():
 def get_rule(rule_id):
     rule_obj = Rule.get(Rule.id == rule_id)
     return rule_obj
-
-
-def set_rule_config(rule_id, config):
-    q = Rule.update(config=config).where(Rule.id == rule_id)
-    q.execute()
-    return
-
-
-def set_rule_remediationconfig(rule_id, config):
-    q = Rule.update(remediation_config=config).where(Rule.id == rule_id)
-    q.execute()
-    return
-
-
-def create_rule(rule_dict):
-
-    try:
-        rule = Rule.create(**rule_dict)
-        rule.save()
-        result = ["Rule \"{0.rule_name}\" Created!"
-                  .format(rule), 'success']
-    except:
-        result = ["Create Failed!", 'danger']
-    return result
 
 
 """

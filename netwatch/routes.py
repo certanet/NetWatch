@@ -162,6 +162,8 @@ def new_model(slug):
     if slug == "nodes":
         title = "Node"
         form = forms.NodeForm()
+        new_obj = models.Node()
+
         profile_choices = []
         all_profiles = models.list_all_connectionprofiles()
         for profile in all_profiles:
@@ -169,49 +171,27 @@ def new_model(slug):
 
         form.connection_profile.choices = profile_choices
 
-        if form.validate_on_submit():
-            # Get form:
-            node_name = form.node_name.data
-            ip_address = form.ip_address.data
-            connection_profile = form.connection_profile.data
-            # Save in database:
-            try:
-                result = models.create_node(node_name, ip_address, connection_profile)
-                flash(*result)
-                return redirect(url_for('modeltable', model=slug))
-            except:
-                flash(*result)
-    if slug == "connectionprofiles":
+    elif slug == "connectionprofiles":
         title = "Connection Profile"
         form = forms.ConnectionProfileForm()
-        if form.validate_on_submit():
-            # Get form:
-            profile_dict = {'profile_name': form.profile_name.data,
-                            'device_os': form.device_os.data,
-                            'ssh_username': form.ssh_username.data,
-                            'ssh_password': form.ssh_password.data,
-                            'ssh_enable': form.ssh_enable.data,
-                            'config_command': form.config_command.data}
-            # Save in database:
-            result = models.create_connectionprofile(profile_dict)
-            flash(*result)
-            return redirect(url_for('modeltable', model='connectionprofiles'))
+        new_obj = models.ConnectionProfile()
 
-    if slug == "rules":
+    elif slug == "rules":
         title = "Rule"
         form = forms.RuleForm()
-        if form.validate_on_submit():
-            # Get form:
-            rule_dict = {'rule_name': form.rule_name.data,
-                         'rule_desc': form.rule_desc.data,
-                         'config': form.config.data,
-                         'regex': form.regex.data,
-                         'found_in_config': form.found_in_config.data,
-                         'remediation_config': form.remediation_config.data}
-            # Save in database:
-            result = models.create_rule(rule_dict)
-            flash(*result)
-            return redirect(url_for('modeltable', model='rules'))
+        new_obj = models.Rule()
+
+    if form.validate_on_submit():
+        # Populate the new object with the form data and try to save to DB:
+        try:
+            form.populate_obj(new_obj)
+            new_obj.save()
+            result = ["{0} \"{1.name}\" Created!".format(title, new_obj), 'success']
+        except:
+            result = ["Create Failed!", 'danger']
+
+        flash(*result)
+        return redirect(url_for('modeltable', model=slug))
 
     return render_template('new_model.html',
                            title='New ' + title,
