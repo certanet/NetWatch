@@ -83,6 +83,21 @@ class ConnectionProfile(DBModel):
             result = ["Delete Failed!", 'danger']
         return result
 
+    def edit(self):
+        data_dict = dict(profile_name=self.profile_name,
+                         device_os=self.device_os,
+                         ssh_username=self.ssh_username,
+                         ssh_password=self.ssh_password,
+                         ssh_enable=self.ssh_enable,
+                         config_command=self.config_command)
+        try:
+            query = ConnectionProfile.update(**data_dict).where(ConnectionProfile.id == self.id)
+            query.execute()
+            result = ["Connection Profile \"{0.profile_name}\" Updated!".format(self), 'success']
+        except:
+            result = ["Update Failed!", 'danger']
+        return result
+
 
 def list_all_connectionprofiles():
     all_profiles = ConnectionProfile.select().order_by(ConnectionProfile.profile_name)
@@ -92,23 +107,6 @@ def list_all_connectionprofiles():
 def get_connectionprofile(profile_id):
     prof_obj = ConnectionProfile.get(ConnectionProfile.id == profile_id)
     return prof_obj
-
-
-def update_connectionprofile(profile):
-    data_dict = dict(profile_name=profile.profile_name,
-                     device_os=profile.device_os,
-                     ssh_username=profile.ssh_username,
-                     ssh_password=profile.ssh_password,
-                     ssh_enable=profile.ssh_enable,
-                     config_command=profile.config_command)
-
-    try:
-        query = ConnectionProfile.update(**data_dict).where(ConnectionProfile.id == profile.id)
-        query.execute()
-        result = ["Connection Profile \"{0.profile_name}\" Updated!".format(profile), 'success']
-    except:
-        result = ["Update Failed!", 'danger']
-    return result
 
 
 def create_connectionprofile(profile_dict):
@@ -180,6 +178,21 @@ class Rule(DBModel):
             result = ["Delete Failed!", 'danger']
         return result
 
+    def edit(self):
+        data_dict = dict(rule_name=self.rule_name,
+                         rule_desc=self.rule_desc,
+                         config=self.config,
+                         regex=self.regex,
+                         found_in_config=self.found_in_config,
+                         remediation_config=self.remediation_config)
+        try:
+            query = Rule.update(**data_dict).where(Rule.id == self.id)
+            query.execute()
+            result = ["Rule \"{0.rule_name}\" Updated!".format(self), 'success']
+        except:
+            result = ["Update Failed!", 'danger']
+        return result
+
 
 def list_all_rules():
     record_set = Rule.select()
@@ -206,23 +219,6 @@ def set_rule_remediationconfig(rule_id, config):
     q = Rule.update(remediation_config=config).where(Rule.id == rule_id)
     q.execute()
     return
-
-
-def update_rule(rule):
-    data_dict = dict(rule_name=rule.rule_name,
-                     rule_desc=rule.rule_desc,
-                     config=rule.config,
-                     regex=rule.regex,
-                     found_in_config=rule.found_in_config,
-                     remediation_config=rule.remediation_config)
-
-    try:
-        query = Rule.update(**data_dict).where(Rule.id == rule.id)
-        query.execute()
-        result = ["Rule \"{0.rule_name}\" Updated!".format(rule), 'success']
-    except:
-        result = ["Update Failed!", 'danger']
-    return result
 
 
 def create_rule(rule_dict):

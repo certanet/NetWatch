@@ -88,20 +88,9 @@ def home():
                            )
 
 
-@app.route('/new')
-def tbc():
-
-    # Placeholder page
-
-    return render_template('BLANK.html',
-                           title='Coming Soon')
-
-
 @app.route('/poller_status')
 def poller_status():
-
     status = models.get_settings('poller_status')
-
     return status
 
 
@@ -213,8 +202,6 @@ def new_model(slug):
         form = forms.RuleForm()
         if form.validate_on_submit():
             # Get form:
-            if form.found_in_config.data == 'False':
-                form.found_in_config.data = bool(False)
             rule_dict = {'rule_name': form.rule_name.data,
                          'rule_desc': form.rule_desc.data,
                          'config': form.config.data,
@@ -229,8 +216,7 @@ def new_model(slug):
     return render_template('new_model.html',
                            title='New ' + title,
                            slug=slug,
-                           form=form
-                           )
+                           form=form)
 
 
 @app.route("/<slug>/edit/<id>", methods=('GET', 'POST'))
@@ -238,36 +224,23 @@ def edit_model(slug, id):
     if slug == "rules":
         my_model = models.get_rule(id)
         form = forms.RuleForm(obj=my_model)
-
-        if form.validate_on_submit():
-            form.populate_obj(my_model)
-            if my_model.found_in_config == 'False':
-                my_model.found_in_config = bool(False)
-            try:
-                result = models.update_rule(my_model)
-                flash(*result)
-                return redirect(url_for('modeltable', model=slug))
-            except:
-                pass
-
-    if slug == "connectionprofiles":
+    elif slug == "connectionprofiles":
         my_model = models.get_connectionprofile(id)
         form = forms.ConnectionProfileForm(obj=my_model)
 
-        if form.validate_on_submit():
-            form.populate_obj(my_model)
-            try:
-                result = models.update_connectionprofile(my_model)
-                flash(*result)
-                return redirect(url_for('modeltable', model=slug))
-            except:
-                pass
+    if form.validate_on_submit():
+        form.populate_obj(my_model)
+        try:
+            result = my_model.edit()
+            flash(*result)
+            return redirect(url_for('modeltable', model=slug))
+        except:
+            pass
 
-    return render_template(
-        'edit_model.html',
-        title='Edit ' + slug,
-        form=form,
-        my_model=my_model)
+    return render_template('edit_model.html',
+                           title='Edit ' + slug,
+                           form=form,
+                           my_model=my_model)
 
 
 @app.route("/configs/view/<id>", methods=('GET', 'POST'))
