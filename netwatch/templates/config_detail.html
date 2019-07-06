@@ -15,7 +15,7 @@
 
 			{% if field.label.text == 'Node' %}
 				{{ field.label }}
-				{{ field(value=obj.node.node_name) }}
+				{{ field(value=obj.node.name) }}
 			{% elif field.label.text == 'Config' %}
 				{{ field(class='form-control', readonly=true, rows=config_length) }}
 			{% else %}

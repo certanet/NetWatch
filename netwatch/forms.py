@@ -4,11 +4,11 @@ from wtforms.validators import DataRequired, Length, IPAddress
 
 
 class NodeForm(FlaskForm):
-    node_name = StringField('Node Name',
-                            validators=[DataRequired(),
-                                        Length(min=-1,
-                                               max=20,
-                                               message='You cannot have more than 20 characters')])
+    name = StringField('Node Name',
+                       validators=[DataRequired(),
+                                   Length(min=-1,
+                                          max=20,
+                                          message='You cannot have more than 20 characters')])
     ip_address = StringField('IP Address',
                              validators=[DataRequired(),
                                          IPAddress(message='Must be a valid IPv4 address')])

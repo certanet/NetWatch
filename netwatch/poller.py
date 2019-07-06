@@ -18,7 +18,7 @@ class Poller:
         self.device_profile = self.build_device_profile()
 
     def run(self):
-        print("Started poller for {0.node_name}...".format(self.node))
+        print("Started poller for {0.name}...".format(self.node))
         models.set_last_poll(datetime.now().strftime('%H:%M:%S'))
 
         if self.ping():
@@ -79,10 +79,10 @@ class Poller:
         return device_profile
 
     def setup_ssh(self):
-        self.logme('Connecting to device {0.node_name}'.format(self.node))
+        self.logme('Connecting to device {0.name}'.format(self.node))
         try:
             net_connect = ConnectHandler(**self.device_profile)
-            self.logme('Successfully connected to: "{}"!'.format(self.node.node_name))
+            self.logme('Successfully connected to: "{}"!'.format(self.node.name))
             return net_connect
         except NetMikoAuthenticationException as e:
             self.logme(str(e))
@@ -104,7 +104,7 @@ class Poller:
             net_connect.enable()
             cfg_req_output = net_connect.send_command(self.node.connection_profile.config_command)
             net_connect.disconnect()
-            self.logme('Got config for node: "{}"!'.format(self.node.node_name))
+            self.logme('Got config for node: "{}"!'.format(self.node.name))
             return cfg_req_output
 
     def ssh_remediate_config(self, raw_remediation_config):
@@ -201,10 +201,10 @@ class PollerService:
                 if models.get_settings('pause_poller') == "True":
                     models.set_setting("poller_status", "PAUSING")
                     break
-                print("Starting poller for {0.node_name}...".format(node))
+                print("Starting poller for {0.name}...".format(node))
                 poller = Poller(node)
                 thread = Thread(target=poller.run,
-                                name='Poller-' + node.node_name)
+                                name='Poller-' + node.name)
                 thread.start()
                 # FOR DEBUG
                 # Stops all threads running in parallel so prints can be seen:

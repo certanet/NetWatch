@@ -43,7 +43,7 @@ def number_files_in_dir(path, extension):
 def list_columns_for(model):
     """
     Takes a string, which should be the name of a Model e.g. Node
-    Returns the fields names for the Model e.g. id, node_name, ip_addess
+    Returns the fields names for the Model e.g. id, name, ip_addess
     """
     return eval(model)._meta.sorted_field_names
 
@@ -211,7 +211,7 @@ def get_rule(rule_id):
 
 
 class Node(DBModel):
-    node_name = CharField(max_length=10, unique=True)
+    name = CharField(max_length=10, unique=True)
     ip_address = CharField(max_length=15, unique=True)
     node_status = BooleanField(default=False)
     last_seen = DateTimeField(null=True)
@@ -221,7 +221,7 @@ class Node(DBModel):
 
     def create_config(self, config, config_name=None):
         if config_name is None:
-            config_name = self.node_name +\
+            config_name = self.name +\
                 "-" +\
                 datetime.datetime.strftime(
                     datetime.datetime.now(), '%Y%m%d-%H%M%S') +\
@@ -319,10 +319,24 @@ class Node(DBModel):
     def delete_self(self):
         try:
             self.delete_instance()
-            result = ["Node \"{0.node_name}\" Deleted!".format(self),
+            result = ["Node \"{0.name}\" Deleted!".format(self),
                       'success']
         except:
             result = ["Delete Failed!", 'danger']
+        return result
+
+    def edit(self):
+        data_dict = dict(name=self.name,
+                         ip_address=self.ip_address,
+                         connection_profile=self.connection_profile)
+
+        try:
+            query = Node.update(**data_dict).where(Node.id == self.id)
+            query.execute()
+            result = ["Node \"{0.name}\" Updated!".format(self), 'success']
+            self.create_log("Node edited!")
+        except:
+            result = ["Update Failed!", 'danger']
         return result
 
 
@@ -355,7 +369,7 @@ def list_compliant_noderules():
                   .where(NodeRule.nr_status == True))
 
     for record in record_set:
-        nodes.append(record.node.node_name)
+        nodes.append(record.node.name)
 
     return nodes
 
@@ -370,7 +384,7 @@ def list_noncompliant_noderules():
                          Node.node_status == False))
 
     for record in record_set:
-        nodes.append(record.node.node_name)
+        nodes.append(record.node.name)
 
     return nodes
 
@@ -385,7 +399,7 @@ def list_pending_noderules():
                          Node.node_status == True))
 
     for record in record_set:
-        nodes.append(record.node.node_name)
+        nodes.append(record.node.name)
 
     return nodes
 
@@ -418,48 +432,17 @@ def list_compliant_nodes():
                      .where(Node.id == node.id))
 
             if all(node_rule.nr_status for node_rule in query):
-                # print('Node: {0.node_name} is totally compliant. Matching rules are:'.format(node))
+                # print('Node: {0.name} is totally compliant. Matching rules are:'.format(node))
                 # print([record.rule.id for record in query])
                 compliant_nodes.append(record.rule.id for record in query)
 
     return compliant_nodes
 
 
-def create_node(node_name, ip_address, connection_profile):
-    data_dict = dict(node_name=node_name,
-                     ip_address=ip_address,
-                     connection_profile=connection_profile)
-
-    try:
-        created = Node.get_or_create(**data_dict)
-        if created[1] is True:
-            result = ["Node \"{0}\" Created!".format(node_name), 'success']
-        else:
-            result = ["Node already exists!", 'danger']
-    except:
-        result = ["ERROR!", 'danger']
-    return result
-
-
 def get_node(node_id):
     # node_obj = get_object_or_404(Node, Node.id == node_id)
     node_obj = Node.get(Node.id == node_id)
     return node_obj
-
-
-def update_node(node):
-    data_dict = dict(node_name=node.node_name,
-                     ip_address=node.ip_address,
-                     connection_profile=node.connection_profile)
-
-    try:
-        query = Node.update(**data_dict).where(Node.id == node.id)
-        query.execute()
-        result = ["Node \"{0.node_name}\" Updated!".format(node), 'success']
-        node.create_log("Node edited!")
-    except:
-        result = ["Update Failed!", 'danger']
-    return result
 
 
 """
@@ -546,7 +529,7 @@ def dict_node_table():
     query_all_nodes = Node.select()
 
     for node in query_all_nodes:
-        node_name_dict = node.node_name
+        node_name_dict = node.name
 
         for rule in query_all_rules:
             query = (NodeRule
@@ -730,7 +713,7 @@ class Config(DBModel):
     node = ForeignKeyField(Node, backref='configs')
     config_name = CharField(max_length=500,
                             unique=True,
-                            default=node.node_name +
+                            default=node.name +
                             "-" +
                             datetime.datetime.strftime(datetime.datetime.now(),'%Y%m%d-%H%M%S') +
                             ".cfg")

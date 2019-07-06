@@ -157,16 +157,16 @@ def modeltable(model):
 @app.route("/<slug>/new/", methods=('GET', 'POST'))
 def new_model(slug):
     '''
-    Create new node
+    Create new Node/ConnectionProfile/Rule
     '''
     if slug == "nodes":
         title = "Node"
         form = forms.NodeForm()
         new_obj = models.Node()
 
+        # Choices are populated on the fly to ensure new additions are listed
         profile_choices = []
-        all_profiles = models.list_all_connectionprofiles()
-        for profile in all_profiles:
+        for profile in models.list_all_connectionprofiles():
             profile_choices.append((profile.id, profile.name))
 
         form.connection_profile.choices = profile_choices
@@ -301,9 +301,9 @@ def node_edit(id):
     node_obj = models.get_node(id)
     form = forms.NodeForm(obj=node_obj)
 
+    # Choices are populated on the fly to ensure new additions are listed
     profile_choices = []
-    all_profiles = models.list_all_connectionprofiles()
-    for profile in all_profiles:
+    for profile in models.list_all_connectionprofiles():
         profile_choices.append((profile.id, profile.name))
 
     form.connection_profile.choices = profile_choices
@@ -321,7 +321,7 @@ def node_edit(id):
 
     if form.validate_on_submit():
         form.populate_obj(node_obj)
-        result = models.update_node(node_obj)
+        result = node_obj.edit()
         flash(*result)
 
         for rule_obj in rules:

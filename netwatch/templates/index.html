@@ -34,16 +34,16 @@
                 <td data-toggle="tooltip" title="{{ node.ip_address }}" class="left" style="white-space: nowrap">
                   <a href="{{ url_for('view_node', id=node.id)}}"
                   {% if node.node_status %}
-                    ><ok>{{ node.node_name }}</ok></a>
+                    ><ok>{{ node.name }}</ok></a>
                   {% else %}
-                     style="color: white">{{ node.node_name }}</a>
+                     style="color: white">{{ node.name }}</a>
                   {% endif %}
                 </td>
 
                 {% for rule in rule_list %}
-                  <td data-toggle="tooltip" title="Auto: TBC" class="left" style="white-space: nowrap">{% if node_table[node.node_name][loop.index0] == "True" %}<ok>PASS</ok>
-                  {% elif node_table[node.node_name][loop.index0] == "-" %}-
-                  {% elif node_table[node.node_name][loop.index0] == "False" and node.node_status == True %}<pending>PEND</pending>
+                  <td data-toggle="tooltip" title="Auto: TBC" class="left" style="white-space: nowrap">{% if node_table[node.name][loop.index0] == "True" %}<ok>PASS</ok>
+                  {% elif node_table[node.name][loop.index0] == "-" %}-
+                  {% elif node_table[node.name][loop.index0] == "False" and node.node_status == True %}<pending>PEND</pending>
                   {% else %}<bad>FAIL</bad>
                   {% endif %}</td>
                 {% endfor %}
