@@ -2,7 +2,7 @@ from netwatch import app, db
 from netwatch.models import *
 from netwatch.routes import *
 from netwatch.secrets import *
-from netwatch import poller
+from netwatch.poller import PollerService
 
 
 db.create_tables([Rule, Node, NodeRule, Settings, ConnectionProfile, Config, Log],
@@ -10,7 +10,7 @@ db.create_tables([Rule, Node, NodeRule, Settings, ConnectionProfile, Config, Log
 
 add_settings(app.config['DUMMY_DATA'])
 
-poller.poller_init()
+PollerService().run()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
