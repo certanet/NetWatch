@@ -1,5 +1,6 @@
 from flask import render_template, redirect, url_for, flash, request, make_response, Markup
 from netwatch import app, models, forms, poller
+from netwatch.secrets import Secrets
 import datetime
 import psutil
 
@@ -185,8 +186,8 @@ def new_model(slug):
         # Populate the new object with the form data and try to save to DB:
         try:
             if slug == "connectionprofiles":
-                form.ssh_password.data = str(models.encrypt_creds(form.ssh_password.data))
-                form.ssh_enable.data = str(models.encrypt_creds(form.ssh_enable.data))
+                form.ssh_password.data = str(Secrets().encrypt(form.ssh_password.data))
+                form.ssh_enable.data = str(Secrets().encrypt(form.ssh_enable.data))
 
             form.populate_obj(new_obj)
             new_obj.save()

@@ -2,7 +2,6 @@ from peewee import *
 import datetime
 import json
 from netwatch import db
-from netwatch import secrets
 
 
 class DBModel(Model):
@@ -107,27 +106,6 @@ def list_all_connectionprofiles():
 def get_connectionprofile(profile_id):
     prof_obj = ConnectionProfile.get(ConnectionProfile.id == profile_id)
     return prof_obj
-
-
-def encrypt_creds(pt):
-    # FOR TESTING:
-    # pt = get_connectionprofile(connectionprofile_id).ssh_password
-    salt = eval(get_settings("secret_salt"))
-
-    ct = secrets.encrypt(pt, salt)
-
-    return ct
-
-
-def decrypt_creds(ct):
-    # FOR TESTING:
-    # ct = eval(get_connectionprofile(connectionprofile_id).ssh_password)
-    ct = eval(ct)
-    salt = eval(get_settings("secret_salt"))
-
-    pt = str(secrets.decrypt(ct, salt))
-
-    return pt
 
 
 """
@@ -598,21 +576,10 @@ class Settings(DBModel):
 
 def add_settings(dummy):
     try:
-        get_settings("secret_salt")
+        get_settings("dash_refresh_rate_secs")
         print("Loaded existing settings!")
     except DoesNotExist:
         print("No existing settings found...")
-        secret_salt = secrets.generate_salt()
-
-        """
-        db_secrets = secrets.generate_secrets()
-
-        if db_secrets['error']:
-            print("ERROR: Creating secrets failed")
-            return
-        """
-
-        check_running_instead_of_startup = False  # not req due to config_cmd
 
         settings = [
             # Used in head of index.html to set page refresh rate...
@@ -623,18 +590,9 @@ def add_settings(dummy):
             {'setting_name': 'poll_interval_mins',
              'setting_value': 60
              },
-            # Used in poller.py to check compliance against start or
-            # running config  - startup is preffered:
-            {'setting_name': 'check_running_instead_of_startup',
-             'setting_value': check_running_instead_of_startup
-             },
             # Referenced in index.html and updated via poller.py
             {'setting_name': 'last_poll',
              'setting_value': '--:--:--'
-             },
-            # Used as a random string during encryption of secrets:
-            {'setting_name': 'secret_salt',
-             'setting_value': secret_salt
              },
             # Used to pause the poller thread:
             {'setting_name': 'pause_poller',
@@ -689,7 +647,7 @@ def set_setting(setting_name, setting_value):
 def list_dash_settings():
     record_set = Settings.select()
     settings = []
-    excluded_settings = ['last_poll', 'secret_salt', 'poller_status']
+    excluded_settings = ['last_poll', 'poller_status']
 
     for record in record_set:
         if record.setting_name not in excluded_settings:

@@ -10,6 +10,7 @@ from netmiko.ssh_exception import NetMikoTimeoutException, \
     NetMikoAuthenticationException
 
 from netwatch import models
+from netwatch.secrets import Secrets
 
 
 class Poller:
@@ -73,8 +74,8 @@ class Poller:
         device_profile = {'ip': self.node.ip_address,
                           'device_type': self.node.connection_profile.device_os,
                           'username': self.node.connection_profile.ssh_username,
-                          'password': models.decrypt_creds(self.node.connection_profile.ssh_password),
-                          'secret': models.decrypt_creds(self.node.connection_profile.ssh_enable),
+                          'password': Secrets().decrypt(self.node.connection_profile.ssh_password),
+                          'secret': Secrets().decrypt(self.node.connection_profile.ssh_enable),
                           'port': self.node.connection_profile.port_num}
         return device_profile
 
