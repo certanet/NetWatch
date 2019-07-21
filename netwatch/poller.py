@@ -171,7 +171,7 @@ class Poller:
 
         return {"backup_again": backup_again}
 
-    def logme(message):
+    def logme(self, message):
         run_time = datetime.now().strftime('%Y%m%d-%H%M')
         log_file = './logs/POLLING-' + run_time + '.log'
 

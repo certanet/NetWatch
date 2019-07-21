@@ -715,11 +715,11 @@ class Config(DBModel):
                             unique=True,
                             default=node.name +
                             "-" +
-                            datetime.datetime.strftime(datetime.datetime.now(),'%Y%m%d-%H%M%S') +
+                            datetime.datetime.strftime(datetime.datetime.now(), '%Y%m%d-%H%M%S') +
                             ".cfg")
     config = TextField()
     saved_time = DateTimeField(default=datetime.datetime.strftime(datetime.datetime.now(),
-                                                                 '%Y-%m-%d %H:%M:%S'))
+                                                                  '%Y-%m-%d %H:%M:%S'))
 
 
 def create_config(config_dict):

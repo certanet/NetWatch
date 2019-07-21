@@ -222,7 +222,7 @@ def edit_model(slug, id):
             pass
 
     return render_template('edit_model.html',
-                           title='Edit ' + slug,
+                           title='Edit: ' + my_model.name,
                            form=form,
                            my_model=my_model)
 
